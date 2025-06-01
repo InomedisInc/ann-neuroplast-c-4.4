@@ -1,0 +1,27 @@
+# Configuration de test avec Early Stopping DÉSACTIVÉ
+# ==================================================
+
+# Paramètres de base
+batch_size: 32
+learning_rate: 0.001
+
+# Configuration des époques et early stopping
+max_epochs: 150          # Plus d'époques puisque pas d'early stopping
+early_stopping: false    # Early stopping DÉSACTIVÉ
+patience: 30             # Ignoré puisque early_stopping = false
+
+# Méthodes neuroplast
+neuroplast_methods:
+  - standard
+
+# Optimiseurs
+optimizers:
+  - adam
+
+# Fonctions d'activation
+activations:
+  - relu
+
+# Métriques
+metrics:
+  - accuracy 

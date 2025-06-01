@@ -1,0 +1,97 @@
+# Configuration pour Cancer du sein (Breast Cancer Wisconsin Dataset)
+# Dataset: datasets/Cancer.csv - Classification M (Malignant) vs B (Benign)
+
+dataset: "datasets/Cancer.csv"
+input_cols: 30    # 30 features (après les colonnes id et diagnosis)
+output_cols: 1    # 1 sortie binaire (M=1, B=0)
+batch_size: 32
+max_epochs: 150
+learning_rate: 0.001
+
+# Structure CSV réelle:
+# Colonne 1: id (ignorée)
+# Colonne 2: diagnosis (M=Malignant, B=Benign) - CIBLE
+# Colonnes 3-32: 30 features numériques - ENTRÉES
+#
+# Features cancer: radius_mean, texture_mean, perimeter_mean, area_mean,
+#                 smoothness_mean, compactness_mean, concavity_mean,
+#                 concave_points_mean, symmetry_mean, fractal_dimension_mean,
+#                 radius_se, texture_se, perimeter_se, area_se,
+#                 smoothness_se, compactness_se, concavity_se,
+#                 concave_points_se, symmetry_se, fractal_dimension_se,
+#                 radius_worst, texture_worst, perimeter_worst, area_worst,
+#                 smoothness_worst, compactness_worst, concavity_worst,
+#                 concave_points_worst, symmetry_worst, fractal_dimension_worst
+
+# Paramètres optimaux pour classification cancer
+early_stopping: true
+patience: 25
+train_test_split: 0.8
+dropout_rate: 0.0      # Désactivé par défaut pour stabilité
+l2_regularization: 0.0001  # Régularisation légère
+momentum: 0.9
+
+# Classes: 
+# M (Malignant) = 1 = Cancer malin
+# B (Benign) = 0 = Tumeur bénigne
+
+# Configuration des métriques
+metrics_export: true
+csv_export: true
+
+# Informations dataset
+name: "breast_cancer_wisconsin"
+description: "Classification cancer du sein - diagnostic M (malin) vs B (bénin)"
+problem_type: "binary_classification"
+num_samples: 569
+num_features: 30
+target_column: "diagnosis"
+
+# Features détaillées
+feature_groups:
+  mean_features: [
+    "radius_mean", "texture_mean", "perimeter_mean", "area_mean",
+    "smoothness_mean", "compactness_mean", "concavity_mean",
+    "concave_points_mean", "symmetry_mean", "fractal_dimension_mean"
+  ]
+  se_features: [
+    "radius_se", "texture_se", "perimeter_se", "area_se",
+    "smoothness_se", "compactness_se", "concavity_se",
+    "concave_points_se", "symmetry_se", "fractal_dimension_se"
+  ]
+  worst_features: [
+    "radius_worst", "texture_worst", "perimeter_worst", "area_worst",
+    "smoothness_worst", "compactness_worst", "concavity_worst",
+    "concave_points_worst", "symmetry_worst", "fractal_dimension_worst"
+  ]
+
+# Architecture recommandée pour cancer
+recommended_architectures:
+  - name: "balanced"
+    structure: [30, 128, 64, 1]
+    description: "Architecture équilibrée pour cancer"
+  - name: "deep"
+    structure: [30, 128, 64, 32, 1]
+    description: "Architecture profonde pour analyse complexe"
+  - name: "wide" 
+    structure: [30, 256, 128, 1]
+    description: "Architecture large pour haute précision"
+
+# Optimiseurs recommandés pour données médicales
+recommended_optimizers: ["adamw", "adam", "rmsprop"]
+recommended_activations: ["neuroplast", "relu", "gelu", "leaky_relu"]
+
+# Métriques importantes pour diagnostic médical
+priority_metrics: ["recall", "precision", "f1_score", "accuracy", "auc_roc"]
+
+# Note: Recall élevé crucial en médical (détecter tous les cas positifs)
+medical_focus: "recall_optimization"
+threshold_optimization: true
+class_imbalance: "moderate"  # Dataset relativement équilibré
+
+# Instructions d'utilisation
+usage_examples:
+  basic_test: "./neuroplast-ann --config config/cancer_breast.yml"
+  exhaustive_test: "./neuroplast-ann --config config/cancer_breast.yml --test-all"
+  architecture_test: "./neuroplast-ann --config config/cancer_breast.yml --test-complete-combinations"
+  optimizer_test: "./neuroplast-ann --config config/cancer_breast.yml --test-all-optimizers" 

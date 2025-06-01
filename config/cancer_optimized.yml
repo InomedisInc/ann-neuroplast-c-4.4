@@ -1,0 +1,62 @@
+# Configuration OPTIMISÉE pour Cancer du sein - Performances élevées
+# Objectif: 90-95% accuracy sur Cancer.csv
+
+dataset: "datasets/Cancer.csv"
+input_cols: 30    # 30 features cancer bien normalisées
+output_cols: 1    # Classification binaire M=1, B=0
+batch_size: 16    # Batch plus petit pour meilleure convergence
+max_epochs: 200   # Plus d'époques pour convergence complète
+learning_rate: 0.0005  # LR plus prudent pour stabilité
+
+# Early stopping optimisé pour hautes performances
+early_stopping: true
+patience: 30      # Plus de patience pour atteindre optimum global
+train_test_split: 0.85  # Plus de données d'entraînement
+
+# Paramètres optimisés pour cancer dataset
+dropout_rate: 0.1        # Légère régularisation
+l2_regularization: 0.00005  # Régularisation très légère
+momentum: 0.95           # Momentum élevé pour stabilité
+
+# Gestion du déséquilibre des classes (62% B, 38% M)
+class_weights: [1.0, 1.7]  # Pondération pour compenser déséquilibre
+threshold_optimization: true
+
+# Architecture optimisée pour cancer (30 features -> diagnostic)
+# Architecture plus large pour capturer patterns complexes
+recommended_architecture: [30, 256, 128, 64, 1]
+
+# Hyperparamètres avancés
+gradient_clipping: 10.0   # Éviter explosion gradients
+weight_initialization: "xavier"
+bias_initialization: 0.01
+
+# Optimiseur recommandé pour ce dataset
+preferred_optimizer: "adamw"
+scheduler: "cosine_annealing"
+
+# Métriques prioritaires pour diagnostic médical
+priority_metrics: ["accuracy", "precision", "recall", "f1_score", "auc_roc"]
+
+# Export et monitoring
+metrics_export: true
+csv_export: true
+verbose_training: true
+
+# Instructions pour tests optimisés
+name: "cancer_high_performance"
+description: "Configuration optimisée cancer - Objectif 90-95% accuracy"
+
+# Notes d'optimisation
+optimization_notes: |
+  - Dataset: 569 échantillons, 30 features
+  - Classes: B=357 (62.7%), M=212 (37.3%)
+  - Objectif accuracy: 90-95%
+  - Features bien normalisées (radius, texture, perimeter, area, etc.)
+  - Patterns discriminants: concavity, compactness, texture_worst
+
+# Commandes recommandées
+usage_commands:
+  single_test: "./neuroplast-ann --config config/cancer_optimized.yml"
+  architecture_comparison: "./neuroplast-ann --config config/cancer_optimized.yml --test-complete-combinations"
+  optimizer_comparison: "./neuroplast-ann --config config/cancer_optimized.yml --test-all-optimizers" 

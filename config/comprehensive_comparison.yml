@@ -1,0 +1,135 @@
+activations:
+- name: neuroplast
+  optimization_method: propagation
+  optimized_with: nadam
+  params:
+    alpha_init: 0.3329833121584336
+    beta_init: 0.5894823157779036
+    plateau_height_init: 0.4148538589793427
+    plateau_width_init: 2.727780074568463
+    shift_init: 0.31119982052994233
+    slope_init: 1.7336180394137353
+    trainable: true
+- name: neuroplast
+  optimization_method: adaptive
+  optimized_with: adamw
+  params:
+    alpha_init: 0.2
+    beta_init: 0.1
+    plateau_height_init: 0.1
+    plateau_width_init: 4.0
+    shift_init: 1.0
+    slope_init: 3.0
+    trainable: true
+- name: neuroplast
+  optimization_method: advanced
+  optimized_with: adamw
+  params:
+    alpha_init: 0.2
+    beta_init: 0.1
+    plateau_height_init: 0.1
+    plateau_width_init: 4.0
+    shift_init: 1.0
+    slope_init: 3.0
+    trainable: true
+- name: neuroplast
+  optimization_method: bayesian
+  optimized_with: adamw
+  params:
+    alpha_init: 0.2
+    beta_init: 0.1
+    plateau_height_init: 0.1
+    plateau_width_init: 4.0
+    shift_init: 1.0
+    slope_init: 3.0
+    trainable: true
+- name: relu
+- name: leaky_relu
+  params:
+    negative_slope: 0.01
+- name: gelu
+- name: sigmoid
+- name: tanh
+- name: elu
+  params:
+    alpha: 1.0
+- name: mish
+base_dataset: config/heart_attack.yml
+datasets:
+- config/heart_attack.yml
+metrics:
+- accuracy
+- precision
+- recall
+- f1
+- roc_auc
+num_runs: 3
+optimizers:
+- name: adamw
+  params:
+    lr: 0.001
+    weight_decay: 0.01
+- name: adam
+  params:
+    lr: 0.001
+- name: sgd
+  params:
+    lr: 0.01
+    momentum: 0.9
+- name: rmsprop
+  params:
+    alpha: 0.99
+    eps: 1.0e-08
+    lr: 0.001
+    momentum: 0.0
+- name: lion
+  params:
+    beta1: 0.9
+    beta2: 0.99
+    lr: 0.0001
+    weight_decay: 0.01
+- name: adabelief
+  params:
+    beta1: 0.9
+    beta2: 0.999
+    eps: 1.0e-08
+    lr: 0.001
+    weight_decay: 0.0001
+- name: radam
+  params:
+    beta1: 0.9
+    beta2: 0.999
+    eps: 1.0e-08
+    lr: 0.001
+    weight_decay: 0.0001
+- name: adamax
+  params:
+    beta1: 0.9
+    beta2: 0.999
+    eps: 1.0e-08
+    lr: 0.001
+    weight_decay: 0.0001
+- name: nadam
+  params:
+    beta1: 0.9
+    beta2: 0.999
+    eps: 1.0e-08
+    lr: 0.001
+    weight_decay: 0.0001
+training:
+  batch_size: 64
+  gradient_clip: 1.0
+  max_epochs: 150
+  patience: 20
+  verbose: true
+visualizations:
+  activation_params: true
+  bar_charts: true
+  best_combinations: 10
+  comparison_heatmap: true
+  feature_importance: true
+  heatmap: true
+  plot_confusion_matrix: true
+  plot_training_curves: true
+  plot_tsne: true
+

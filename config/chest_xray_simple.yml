@@ -1,0 +1,29 @@
+# Configuration simplifiée pour le dataset d'images Chest X-Ray
+# Dataset: Images de radiographies thoraciques pour détection de pneumonie
+
+# Configuration de base
+batch_size: 16
+max_epochs: 50
+learning_rate: 0.001
+early_stopping: true
+patience: 10
+
+# Méthodes neuroplast
+neuroplast_methods:
+  - name: "standard"
+  - name: "adaptive"
+
+# Fonctions d'activation
+activations:
+  - name: "relu"
+  - name: "gelu"
+
+# Optimiseurs
+optimizers:
+  - name: "adam"
+  - name: "adamw"
+
+# Métriques
+metrics:
+  - name: "accuracy"
+  - name: "f1_score" 

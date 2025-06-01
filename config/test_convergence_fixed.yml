@@ -1,0 +1,41 @@
+# Configuration OPTIMISÉE pour 90%+ d'accuracy - VERSION CORRIGÉE
+# ================================================================
+
+# Paramètres d'entraînement optimisés
+max_epochs: 100          # Époques raisonnables
+early_stopping: true     # Early stopping activé
+patience: 25             # Patience modérée
+batch_size: 4            # Batch size optimal
+learning_rate: 0.001     # Learning rate standard
+
+# Optimisation adaptative temps réel
+optimized_parameters: true  # Active l'optimiseur temps réel intégré
+
+# Régularisation
+dropout_rate: 0.0        # Pas de dropout
+l2_regularization: 0.0001 # L2 légère
+
+# Momentum
+momentum: 0.9            # Momentum standard
+
+# Gestion des classes
+class_weights: [1.0, 2.0]  # Pondération modérée
+
+# Méthodes neuroplast
+neuroplast_methods:
+  - standard
+  - adaptive
+
+# Optimiseurs
+optimizers:
+  - adam
+
+# Activations
+activations:
+  - relu
+  - sigmoid
+
+# Métriques
+metrics:
+  - accuracy
+  - f1_score 

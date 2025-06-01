@@ -1,0 +1,32 @@
+# Configuration de test pour l'affichage organisé
+# Test avec quelques combinaisons pour voir les barres de progression
+
+dataset: "heart_attack_prediction"
+batch_size: 4
+max_epochs: 30
+learning_rate: 0.001
+early_stopping: true
+patience: 15
+optimized_parameters: false  # Désactiver l'optimiseur adaptatif
+
+# Quelques méthodes pour test rapide
+neuroplast_methods:
+  - standard
+  - adaptive
+
+# Quelques optimiseurs pour test
+optimizers:
+  - adam
+  - adamw
+
+# Quelques activations pour test
+activations:
+  - relu
+  - gelu
+
+# Métriques à calculer
+metrics:
+  - accuracy
+  - f1_score
+  - precision
+  - recall 

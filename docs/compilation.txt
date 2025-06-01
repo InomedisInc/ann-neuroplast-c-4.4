@@ -1,0 +1,44 @@
+gcc -std=c99 -O2 -Isrc -o neuroplast-ann src/main.c src/args_parser.c src/config.c 
+src/memory.c src/math_utils.c src/data/dataset.c src/data/data_loader.c 
+src/data/preprocessing.c src/data/split.c src/neural/activation.c src/neural/neuroplast.c 
+src/neural/layer.c src/neural/network.c src/neural/forward.c src/neural/backward.c 
+src/training/trainer.c src/training/standard.c src/training/adaptive.c src/training/advanced.c 
+src/training/bayesian.c src/training/progressive.c src/training/swarm.c src/training/propagation.c 
+src/training/early_stopping.c src/optimizers/optimizer.c src/optimizers/sgd.c 
+src/optimizers/adam.c src/optimizers/adamw.c src/optimizers/rmsprop.c src/optimizers/lion.c 
+src/optimizers/adabelief.c src/optimizers/radam.c src/optimizers/adamax.c src/optimizers/nadam.c 
+src/evaluation/metrics.c src/evaluation/confusion_matrix.c src/evaluation/roc.c 
+src/evaluation/f1_score.c src/comparison/compare.c src/comparison/benchmark.c 
+src/comparison/all_methods.c src/reporting/experiment_results.c src/reporting/table.c 
+src/reporting/csv_export.c src/reporting/json_export.c src/rich_config.c 
+src/yaml_parser_rich.c -lm
+
+
+## Inclus les droits d'accès.
+
+gcc -std=c99 -O2 -Isrc -o neuroplast-ann src/main.c src/args_parser.c src/config.c 
+src/memory.c src/math_utils.c src/data/dataset.c src/data/data_loader.c 
+src/data/preprocessing.c src/data/split.c src/neural/activation.c src/neural/neuroplast.c 
+src/neural/layer.c src/neural/network.c src/neural/forward.c src/neural/backward.c 
+src/training/trainer.c src/training/standard.c src/training/adaptive.c src/training/advanced.c 
+src/training/bayesian.c src/training/progressive.c src/training/swarm.c 
+src/training/propagation.c src/training/early_stopping.c src/optimizers/optimizer.c 
+src/optimizers/sgd.c src/optimizers/adam.c src/optimizers/adamw.c src/optimizers/rmsprop.c 
+src/optimizers/lion.c src/optimizers/adabelief.c src/optimizers/radam.c src/optimizers/adamax.c 
+src/optimizers/nadam.c src/evaluation/metrics.c src/evaluation/confusion_matrix.c 
+src/evaluation/roc.c src/evaluation/f1_score.c src/comparison/compare.c src/comparison/benchmark.c 
+src/comparison/all_methods.c src/reporting/experiment_results.c src/reporting/table.c 
+src/reporting/csv_export.c 
+src/reporting/json_export.c src/rich_config.c src/yaml_parser_rich.c -lm
+
+
+./neuroplast-ann --config config/comprehensive_comparison.yml --mode compare_all_methods 
+--optim_config config/heart_attack.yml  
+--neuroplast_methods "standard adaptive advanced bayesian progressive swarm propagation" 
+--optimizers "adamw adam sgd rmsprop lion adabelief radam adamax nadam" 
+--activations "NeuroPlast ReLU LeakyReLU GELU Sigmoid ELU Mish Swish PReLU" --seed 42
+
+./neuroplast-ann --config config/comprehensive_comparison.yml --mode compare_all_methods 
+--neuroplast_methods "standard adaptive advanced bayesian progressive swarm propagation" 
+--optimizers "sgd adam adamw rmsprop lion adabelief radam adamax nadam" 
+--activations "ReLU Sigmoid GELU Leaky_ReLU ELU Mish Swish PReLU NeuroPlast" --seed 42

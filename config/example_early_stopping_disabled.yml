@@ -1,0 +1,51 @@
+# Configuration avec Early Stopping Désactivé
+# ==========================================
+
+# Dataset et paramètres de base
+base_dataset: config/heart_attack.yml
+batch_size: 64
+learning_rate: 0.002
+
+# Configuration des époques et early stopping
+max_epochs: 200          # Plus d'époques puisque pas d'early stopping
+early_stopping: false    # Early stopping désactivé
+patience: 50             # Patience ignorée puisque early_stopping = false
+
+# Configuration d'entraînement plus aggressive
+training:
+  batch_size: 64
+  max_epochs: 200
+  early_stopping: false
+  patience: 50
+  gradient_clip: 1.0
+  verbose: true
+
+# Méthodes neuroplast à tester (plus limitées pour plus d'époques)
+neuroplast_methods:
+  - name: standard
+  - name: adaptive
+
+# Optimiseurs (focus sur les plus stables)
+optimizers:
+  - name: adamw
+    params:
+      lr: 0.002
+      weight_decay: 0.01
+  - name: adam
+    params:
+      lr: 0.002
+
+# Fonctions d'activation (focus sur les plus fiables)
+activations:
+  - name: neuroplast
+    params:
+      trainable: true
+  - name: relu
+
+# Métriques à suivre
+metrics:
+  - accuracy
+  - precision
+  - recall
+  - f1_score
+  - auc_roc 

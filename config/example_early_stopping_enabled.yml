@@ -1,0 +1,50 @@
+# Configuration avec Early Stopping Activé
+# =====================================
+
+# Dataset et paramètres de base
+base_dataset: config/heart_attack.yml
+batch_size: 32
+learning_rate: 0.001
+
+# Configuration des époques et early stopping
+max_epochs: 150          # 150 époques max (au lieu de 100 par défaut)
+early_stopping: true     # Early stopping activé
+patience: 25             # Attendre 25 époques sans amélioration
+
+# Méthodes neuroplast à tester
+neuroplast_methods:
+  - name: standard
+  - name: adaptive
+  - name: advanced
+  - name: bayesian
+
+# Optimiseurs
+optimizers:
+  - name: adamw
+    params:
+      lr: 0.001
+      weight_decay: 0.01
+  - name: adam
+    params:
+      lr: 0.001
+  - name: sgd
+    params:
+      lr: 0.01
+      momentum: 0.9
+
+# Fonctions d'activation
+activations:
+  - name: neuroplast
+    params:
+      trainable: true
+  - name: relu
+  - name: gelu
+  - name: sigmoid
+
+# Métriques à suivre
+metrics:
+  - accuracy
+  - precision
+  - recall
+  - f1_score
+  - auc_roc 

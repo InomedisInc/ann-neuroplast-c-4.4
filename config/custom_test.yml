@@ -1,0 +1,72 @@
+# Configuration personnalisée pour test rapide - 18 combinaisons
+# Durée estimée : 10-15 minutes
+
+dataset: "embedded_data"
+input_cols: 4
+output_cols: 1
+batch_size: 32
+max_epochs: 50          # Réduit pour test rapide
+learning_rate: 0.001
+
+# Paramètres d'entraînement
+train_test_split: 0.8
+patience: 10            # Arrêt précoce plus agressif
+early_stopping: true
+
+# Données simulées intégrées (même que comprehensive_test)
+embedded_training_data: |
+  0.1,0.1,0.1,0.1,0
+  0.1,0.1,0.9,0.9,1
+  0.1,0.9,0.1,0.9,1
+  0.1,0.9,0.9,0.1,0
+  0.9,0.1,0.1,0.9,1
+  0.9,0.1,0.9,0.1,0
+  0.9,0.9,0.1,0.1,0
+  0.9,0.9,0.9,0.9,1
+  0.2,0.2,0.2,0.2,0
+  0.2,0.2,0.8,0.8,1
+  0.2,0.8,0.2,0.8,1
+  0.2,0.8,0.8,0.2,0
+  0.8,0.2,0.2,0.8,1
+  0.8,0.2,0.8,0.2,0
+  0.8,0.8,0.2,0.2,0
+  0.8,0.8,0.8,0.8,1
+
+# Architecture simplifiée
+architecture:
+  hidden_layers: [128, 64]  # Plus petite pour test rapide
+  dropout_rate: 0.1
+  use_batch_norm: false
+
+# SÉLECTION RÉDUITE - 18 combinaisons (3×3×2)
+neuroplast_methods:
+  - standard
+  - adaptive  
+  - advanced
+
+optimizers:
+  - adamw
+  - adam
+  - sgd
+
+activations:
+  - neuroplast
+  - relu
+
+# Configuration des expériences
+experiments:
+  num_trials: 2           # Moins d'essais pour test rapide
+  max_epochs: 50          # Moins d'époques
+  patience: 8             # Arrêt précoce plus agressif
+  convergence_threshold: 0.90  # Seuil plus bas
+  
+# Métriques de performance
+metrics:
+  primary: "accuracy"
+  secondary: ["f1_score"]
+  
+# Export des résultats
+export:
+  csv: true
+  json: false
+  detailed_logs: false    # Moins de logs pour test rapide 

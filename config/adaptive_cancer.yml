@@ -1,0 +1,150 @@
+# Configuration ADAPTATIVE pour Cancer du sein
+# Optimisation dynamique en temps réel des paramètres
+
+dataset: "datasets/Cancer.csv"
+input_cols: 30    # 30 features cancer
+output_cols: 1    # Classification binaire M/B
+
+# PARAMÈTRES INITIAUX (seront ajustés dynamiquement)
+batch_size: 32
+max_epochs: 200
+learning_rate: 0.001      # Point de départ - sera adapté
+momentum: 0.9             # Point de départ - sera adapté
+dropout_rate: 0.1         # Point de départ - sera adapté
+l2_regularization: 0.0001 # Point de départ - sera adapté
+
+# Gestion des classes (sera adaptée dynamiquement)
+class_weights: [1.0, 1.5]  # Ratio initial - sera optimisé
+
+# Configuration de l'optimisation adaptative
+adaptive_optimization:
+  enabled: true
+  adaptation_frequency: 5        # Adapter tous les 5 epochs
+  
+  # Stratégies d'adaptation activées
+  adapt_learning_rate: true
+  adapt_momentum: true
+  adapt_dropout: true
+  adapt_class_weights: true
+  adapt_l2_regularization: false  # Garder L2 fixe pour simplicité
+  
+  # Limites d'adaptation intelligentes
+  learning_rate_bounds: [0.00001, 0.01]    # 1% à 1000% du LR initial
+  momentum_bounds: [0.5, 0.999]            # Range momentum
+  dropout_bounds: [0.0, 0.5]               # 0% à 50% dropout
+  class_weight_bounds: [0.5, 10.0]         # Ratio de 0.5 à 10
+  
+  # Seuils de déclenchement
+  stagnation_threshold: 10      # Epochs sans amélioration avant adaptation
+  improvement_threshold: 0.05   # 5% d'amélioration pour augmenter LR
+  overfitting_threshold: 0.1    # 10% gap train/val pour augmenter dropout
+  oscillation_threshold: 0.02   # 2% volatility pour réduire momentum
+  
+  # Facteurs d'ajustement
+  lr_reduction_factor: 0.8      # Réduire LR de 20% si stagnation
+  lr_increase_factor: 1.1       # Augmenter LR de 10% si amélioration rapide
+  momentum_adjustment: 0.02     # Ajustement momentum ±2%
+  dropout_adjustment: 0.05      # Ajustement dropout ±5%
+  class_weight_adjustment: 0.2  # Ajustement poids classes ±20%
+
+# Analyse automatique du dataset
+dataset_analysis:
+  auto_detect_type: true        # Détecter automatiquement le type
+  analyze_class_distribution: true
+  calculate_feature_variance: true
+  estimate_complexity: true
+  
+  # Actions basées sur l'analyse
+  auto_adjust_initial_params: true
+  complexity_based_adaptation: true
+
+# Early stopping adaptatif
+early_stopping: true
+patience: 30                    # Plus de patience pour adaptation
+min_delta: 0.001               # Amélioration minimale requise
+
+# Monitoring et export
+metrics_export: true
+csv_export: true
+save_adaptation_history: true   # Sauvegarder l'historique des adaptations
+verbose_adaptation: true        # Afficher les adaptations en temps réel
+
+# Validation croisée adaptative (optionnel)
+adaptive_validation:
+  enabled: false               # Désactivé par défaut
+  cv_folds: 5
+  adapt_based_on_cv: false
+
+name: "cancer_adaptive_realtime"
+description: "Configuration adaptative temps réel - optimisation automatique"
+
+# Instructions d'utilisation
+usage_instructions: |
+  OPTIMISATION ADAPTATIVE EN TEMPS RÉEL:
+  
+  Cette configuration démarre avec des paramètres initiaux raisonnables
+  puis les ajuste automatiquement pendant l'entraînement basé sur:
+  
+  📊 ANALYSE AUTOMATIQUE DU DATASET:
+  - Détection du type (binaire/multi-classe)
+  - Distribution des classes
+  - Variance des features
+  - Estimation de la complexité
+  
+  🔄 ADAPTATION DYNAMIQUE:
+  - Learning Rate: Réduit si stagnation, augmente si amélioration rapide
+  - Momentum: Augmente si convergence lente, réduit si oscillations
+  - Dropout: Augmente si overfitting, réduit si underfitting
+  - Class Weights: Ajuste basé sur performance par classe
+  
+  ⚡ DÉCLENCHEURS INTELLIGENTS:
+  - Stagnation > 10 epochs → Réduction LR
+  - Amélioration > 5% → Augmentation LR
+  - Gap train/val > 10% → Augmentation dropout
+  - Volatility > 2% → Réduction momentum
+  
+  🎯 COMMANDES:
+  ./neuroplast-ann --config config/adaptive_cancer.yml
+  ./neuroplast-ann --config config/adaptive_cancer.yml --test-all-optimizers
+
+# Stratégie d'adaptation détaillée
+adaptation_strategy: |
+  STRATÉGIE D'OPTIMISATION ADAPTATIVE:
+  
+  1. PHASE D'INITIALISATION:
+     ✅ Analyse automatique du dataset
+     ✅ Ajustement des paramètres initiaux basé sur la complexité
+     ✅ Définition des limites d'adaptation intelligentes
+  
+  2. PHASE D'ENTRAÎNEMENT ADAPTATIF:
+     🔄 Monitoring continu des métriques
+     📊 Historique des performances (100 derniers epochs)
+     🎯 Détection automatique des patterns (stagnation, oscillations, overfitting)
+     ⚡ Adaptation en temps réel tous les 5 epochs
+  
+  3. STRATÉGIES D'ADAPTATION:
+     
+     📉 LEARNING RATE:
+     - Stagnation détectée → Réduction 20%
+     - Amélioration rapide → Augmentation 10%
+     - Loss en hausse → Réduction 10%
+     
+     🚀 MOMENTUM:
+     - Convergence lente → Augmentation 2%
+     - Oscillations détectées → Réduction 5%
+     
+     🛡️ DROPOUT:
+     - Overfitting (gap > 10%) → Augmentation 5%
+     - Underfitting possible → Réduction 2%
+     
+     ⚖️ CLASS WEIGHTS:
+     - Performance déséquilibrée → Ajustement 20%
+     - Classe critique sous-performante → Augmentation poids
+  
+  4. LIMITES DE SÉCURITÉ:
+     🔒 LR: 0.00001 - 0.01 (1% à 1000% initial)
+     🔒 Momentum: 0.5 - 0.999
+     🔒 Dropout: 0.0 - 0.5
+     🔒 Class Weights: 0.5 - 10.0
+  
+  RÉSULTAT: Optimisation automatique pour n'importe quel dataset! 

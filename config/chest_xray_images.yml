@@ -1,0 +1,62 @@
+# Configuration pour le dataset d'images Chest X-Ray
+# Dataset: Images de radiographies thoraciques pour détection de pneumonie
+
+# Type de dataset
+is_image_dataset: true
+
+# Répertoires d'images (obligatoires: train et test, optionnel: val)
+image_train_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/train"
+image_test_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/test"
+image_val_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/val"
+
+# Dimensions des images (RÉDUITES pour compatibilité avec l'architecture)
+image_width: 8        # 224 → 8 (compatible avec l'architecture Input(8))
+image_height: 8       # 224 → 8 (8x8x1 = 64 pixels)
+image_channels: 1     # 1 = grayscale (radiographies)
+
+# Configuration de l'entraînement
+batch_size: 16        # Batch size réduit pour les images
+max_epochs: 50        # Moins d'époques pour les images
+learning_rate: 0.001  # Learning rate standard
+
+# Early stopping pour éviter overfitting
+early_stopping: true
+patience: 10
+
+# Paramètres d'optimisation
+dropout_rate: 0.2
+l2_regularization: 0.001
+momentum: 0.9
+
+# Export des métriques
+metrics_export: true
+csv_export: true
+
+# Description
+name: "chest_xray_pneumonia_reduced"
+description: "Classification de pneumonie sur radiographies thoraciques (8x8 pixels)"
+
+# Classes attendues
+expected_classes: "NORMAL, PNEUMONIA"
+expected_performance: "Objectif 75-85% accuracy (images réduites)"
+
+# Méthodes de neuroplasticité
+neuroplast_methods:
+  - adaptive
+  - standard
+
+# Fonctions d'activation
+activations:
+  - relu
+  - sigmoid
+
+# Optimiseurs
+optimizers:
+  - adam
+  - adamw
+
+# Métriques
+metrics:
+  - accuracy
+  - precision
+  - recall 

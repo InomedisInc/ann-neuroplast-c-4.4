@@ -1,0 +1,83 @@
+# Informations générales
+name: "breast_cancer"
+description: "Classification du cancer du sein basée sur des caractéristiques cellulaires"
+problem_type: "classification"
+data_type: "tabular"
+
+# Chemin des données
+data_path: "datasets/breast_cancer.csv"
+target_column: "diagnosis"
+feature_names: [
+    "radius_mean", "texture_mean", "perimeter_mean", "area_mean",
+    "smoothness_mean", "compactness_mean", "concavity_mean",
+    "concave_points_mean", "symmetry_mean", "fractal_dimension_mean",
+    "radius_se", "texture_se", "perimeter_se", "area_se",
+    "smoothness_se", "compactness_se", "concavity_se",
+    "concave_points_se", "symmetry_se", "fractal_dimension_se",
+    "radius_worst", "texture_worst", "perimeter_worst", "area_worst",
+    "smoothness_worst", "compactness_worst", "concavity_worst",
+    "concave_points_worst", "symmetry_worst", "fractal_dimension_worst"
+]
+
+# Paramètres des données
+input_size: 30
+num_classes: 2
+batch_size: 32
+
+# Splits des données
+splits:
+  train: 0.7
+  validation: 0.15
+  test: 0.15
+
+# Prétraitement
+preprocessing:
+  scaling: "standard"          # standard, minmax, robust
+  missing_values: "mean"       # mean, median, mode
+  outliers: "clip"            # clip, remove, none
+  balance_method: "SMOTE"     # SMOTE, class_weight, none
+
+# Architecture du modèle
+model:
+  type: "MLP_NeuroPlast"
+  hidden_sizes: [128, 64, 32]
+  dropout: 0.3
+  batch_norm: true
+  individual_activation: true
+  activation_params:
+    slope_init: 2.5
+    shift_init: 1.0
+    plateau_height_init: 0.15
+    plateau_width_init: 2.0
+    trainable: true
+
+# Paramètres d'entraînement
+training:
+  max_epochs: 200
+  patience: 20
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  gradient_clip: 1.0
+  optimizer: "adamw"
+  scheduler: "reduce_lr_plateau"
+  scheduler_params:
+    factor: 0.5
+    patience: 10
+    min_lr: 0.000001
+
+# Métriques à suivre
+metrics:
+  - accuracy
+  - precision
+  - recall
+  - f1_score
+  - auc_roc
+
+# Paramètres de visualisation
+visualization:
+  plot_training_curves: true
+  plot_confusion_matrix: true
+  plot_feature_importance: true
+  plot_tsne: true
+  save_format: "png"
+  dpi: 300
