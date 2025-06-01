@@ -13,6 +13,32 @@
   Dédié à la recherche IA et neurosciences en C natif  
 ```
 
+## 📦 REPOSITORY GITHUB
+
+**🔗 Repository officiel** : [`https://github.com/InomedisInc/ann-neuroplast-c`](https://github.com/InomedisInc/ann-neuroplast-c)
+
+### 🚀 Installation rapide
+```bash
+# Cloner le repository
+git clone https://github.com/InomedisInc/ann-neuroplast-c.git
+cd ann-neuroplast-c
+
+# Compilation avec Model Saver intégré
+./compile_with_model_saver.sh
+
+# Test avec sauvegarde des 10 meilleurs modèles
+./neuroplast-ann --config config/chest_xray_simple.yml --test-all
+```
+
+### 📋 Contenu du repository
+- ✅ **Framework complet** NEUROPLAST-ANN v4.2
+- ✅ **Système Model Saver** avec sauvegarde des 10 meilleurs modèles
+- ✅ **Interface Python** générée automatiquement
+- ✅ **Support multi-modal** : Données tabulaires + Images
+- ✅ **Documentation complète** : README.md fusionné + compilation.txt
+- ✅ **Configurations prêtes** : 30+ fichiers YAML d'exemple
+- ✅ **Tests intégrés** : Validation complète du système
+
 ## 🎯 DESCRIPTION
 
 NEUROPLAST-ANN est un framework d'intelligence artificielle modulaire écrit en C natif, spécialisé dans les réseaux de neurones adaptatifs avec optimisation temps réel intégrée. Le système atteint automatiquement **95%+ d'accuracy** grâce à son optimiseur adaptatif intelligent et ses paramètres ultra-optimisés.
