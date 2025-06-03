@@ -7,13 +7,14 @@
 #include <libgen.h>
 #include <time.h>
 #include "../colored_output.h"
+#include "../rich_config.h"
 
 // Inclusion de stb_image pour le chargement d'images
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 // Fonction utilitaire pour vérifier si un fichier est une image
-static bool is_image_file(const char *filename) {
+bool is_image_file(const char *filename) {
     const char *ext = strrchr(filename, '.');
     if (!ext) return false;
     
@@ -25,7 +26,7 @@ static bool is_image_file(const char *filename) {
 }
 
 // Fonction utilitaire pour mélanger un ImageSet (Fisher-Yates shuffle)
-static void shuffle_image_set(ImageSet *set) {
+void shuffle_image_set(ImageSet *set) {
     if (!set || set->count <= 1) return;
     
     srand(time(NULL));

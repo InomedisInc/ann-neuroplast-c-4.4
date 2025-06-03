@@ -129,16 +129,21 @@ int parse_yaml_rich(const char *filename, RichConfig *cfg) {
     
     // Initialisation des valeurs par défaut
     memset(cfg, 0, sizeof(RichConfig));
-    cfg->batch_size = 32;  // Valeurs par défaut
-    cfg->max_epochs = 100; // Base 100 époques comme demandé
+    cfg->batch_size = 32;
+    cfg->max_epochs = 100;
     cfg->learning_rate = 0.001f;
-    cfg->early_stopping = 1;  // Early stopping activé par défaut
-    cfg->patience = 20;       // Patience par défaut de 20 époques
-    cfg->optimized_parameters = 0;  // Configuration statique par défaut
+    cfg->early_stopping = 1;
+    cfg->patience = 20;
+    cfg->optimized_parameters = 0;
+    cfg->input_cols = 10;
+    cfg->output_cols = 1;
+    cfg->image_width = 128;
+    cfg->image_height = 128;
+    cfg->image_channels = 3;
     
     char line[MAX_LINE];
     
-    // Première passe: trouver le base_dataset
+    // Parser simple ligne par ligne
     while (fgets(line, sizeof(line), file)) {
         // Retire le retour à la ligne
         line[strcspn(line, "\n")] = 0;
@@ -146,176 +151,16 @@ int parse_yaml_rich(const char *filename, RichConfig *cfg) {
         // Ignore les lignes vides et commentaires
         if (line[0] == 0 || line[0] == '#') continue;
         
-        // Cherche base_dataset
-        if (strstr(line, "base_dataset:")) {
-            char *value = strchr(line, ':') + 1;
-            while (*value && isspace(*value)) value++;
-            strncpy(cfg->base_dataset, value, sizeof(cfg->base_dataset) - 1);
-            cfg->base_dataset[sizeof(cfg->base_dataset) - 1] = '\0';
-            clean_value(cfg->base_dataset);
-        }
-        
-        // Cherche dataset
-        if (strstr(line, "dataset:")) {
-            char *value = strchr(line, ':') + 1;
-            while (*value && isspace(*value)) value++;
-            strncpy(cfg->dataset, value, sizeof(cfg->dataset) - 1);
-            cfg->dataset[sizeof(cfg->dataset) - 1] = '\0';
-            clean_value(cfg->dataset);
-        }
-    }
-    
-    // Si on a trouvé un fichier base_dataset, le charger pour obtenir les dimensions
-    if (cfg->base_dataset[0] != '\0') {
-        if (!read_dataset_dimensions(cfg->base_dataset, cfg)) {
-            printf("Avertissement: Impossible de lire les dimensions depuis %s\n", cfg->base_dataset);
-        }
-    }
-    
-    // Revenir au début du fichier pour une deuxième passe
-    rewind(file);
-    
-    // Section courante lors du parsing
-    enum {
-        SECTION_NONE,
-        SECTION_NEUROPLAST_METHODS,
-        SECTION_ACTIVATIONS,
-        SECTION_OPTIMIZERS,
-        SECTION_METRICS,
-        SECTION_TRAINING
-    } current_section = SECTION_NONE;
-    
-    // Index courants pour les sections
-    int method_idx = -1;
-    int activation_idx = -1;
-    int optimizer_idx = -1;
-    int metric_idx = -1;
-    
-    // Deuxième passe: parser toutes les données
-    while (fgets(line, sizeof(line), file)) {
-        // Retire le retour à la ligne
-        line[strcspn(line, "\n")] = 0;
-        
-        // Ignore les lignes vides et commentaires
-        if (line[0] == 0 || line[0] == '#') continue;
-        
-        // Détecte les sections
-        if (strstr(line, "neuroplast_methods:")) {
-            current_section = SECTION_NEUROPLAST_METHODS;
-            continue;
-        }
-        else if (strstr(line, "activations:")) {
-            current_section = SECTION_ACTIVATIONS;
-            continue;
-        }
-        else if (strstr(line, "optimizers:")) {
-            current_section = SECTION_OPTIMIZERS;
-            continue;
-        }
-        else if (strstr(line, "metrics:")) {
-            current_section = SECTION_METRICS;
-            continue;
-        }
-        else if (strstr(line, "training:")) {
-            current_section = SECTION_TRAINING;
-            continue;
-        }
-        
-        // Détecte les entrées de liste avec un tiret
-        if (line[0] == '-') {
-            char *name_start = strchr(line, '-') + 1;
-            
-            // Skip les espaces après le tiret
-            while (*name_start && isspace(*name_start)) name_start++;
-            
-            if (*name_start == 0) continue; // Ligne vide
-            
-            // Si on a "- name:" ou juste "- valeur"
-            if (strstr(name_start, "name:")) {
-                char *name_value = strchr(name_start, ':') + 1;
-                while (*name_value && isspace(*name_value)) name_value++;
-                
-                switch (current_section) {
-                    case SECTION_NEUROPLAST_METHODS:
-                        if (cfg->num_neuroplast_methods < MAX_METHODS) {
-                            method_idx = cfg->num_neuroplast_methods++;
-                            strncpy(cfg->neuroplast_methods[method_idx].name, name_value, MAX_NAME - 1);
-                            cfg->neuroplast_methods[method_idx].name[MAX_NAME - 1] = '\0';
-                        }
-                        break;
-                    case SECTION_ACTIVATIONS:
-                        if (cfg->num_activations < MAX_METHODS) {
-                            activation_idx = cfg->num_activations++;
-                            strncpy(cfg->activations[activation_idx].name, name_value, MAX_NAME - 1);
-                            cfg->activations[activation_idx].name[MAX_NAME - 1] = '\0';
-                        }
-                        break;
-                    case SECTION_OPTIMIZERS:
-                        if (cfg->num_optimizers < MAX_METHODS) {
-                            optimizer_idx = cfg->num_optimizers++;
-                            strncpy(cfg->optimizers[optimizer_idx].name, name_value, MAX_NAME - 1);
-                            cfg->optimizers[optimizer_idx].name[MAX_NAME - 1] = '\0';
-                        }
-                        break;
-                    case SECTION_METRICS:
-                        if (cfg->num_metrics < MAX_METHODS) {
-                            metric_idx = cfg->num_metrics++;
-                            strncpy(cfg->metrics[metric_idx].name, name_value, MAX_NAME - 1);
-                            cfg->metrics[metric_idx].name[MAX_NAME - 1] = '\0';
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-            // Si c'est juste "- valeur" sans "name:"
-            else {
-                switch (current_section) {
-                    case SECTION_NEUROPLAST_METHODS:
-                        if (cfg->num_neuroplast_methods < MAX_METHODS) {
-                            method_idx = cfg->num_neuroplast_methods++;
-                            strncpy(cfg->neuroplast_methods[method_idx].name, name_start, MAX_NAME - 1);
-                            cfg->neuroplast_methods[method_idx].name[MAX_NAME - 1] = '\0';
-                        }
-                        break;
-                    case SECTION_ACTIVATIONS:
-                        if (cfg->num_activations < MAX_METHODS) {
-                            activation_idx = cfg->num_activations++;
-                            strncpy(cfg->activations[activation_idx].name, name_start, MAX_NAME - 1);
-                            cfg->activations[activation_idx].name[MAX_NAME - 1] = '\0';
-                        }
-                        break;
-                    case SECTION_OPTIMIZERS:
-                        if (cfg->num_optimizers < MAX_METHODS) {
-                            optimizer_idx = cfg->num_optimizers++;
-                            strncpy(cfg->optimizers[optimizer_idx].name, name_start, MAX_NAME - 1);
-                            cfg->optimizers[optimizer_idx].name[MAX_NAME - 1] = '\0';
-                        }
-                        break;
-                    case SECTION_METRICS:
-                        if (cfg->num_metrics < MAX_METHODS) {
-                            metric_idx = cfg->num_metrics++;
-                            strncpy(cfg->metrics[metric_idx].name, name_start, MAX_NAME - 1);
-                            cfg->metrics[metric_idx].name[MAX_NAME - 1] = '\0';
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-            
-            continue;
-        }
-        
-        // Parser les valeurs simples (non-listes) pour toutes les sections
+        // Parser les valeurs simples uniquement
         if (strchr(line, ':') && line[0] != '-') {
             char *colon = strchr(line, ':');
             if (colon) {
                 *colon = '\0';
-                char key[MAX_NAME], value[MAX_NAME];
-                strncpy(key, line, MAX_NAME - 1);
-                key[MAX_NAME - 1] = '\0';
-                strcpy(value, colon + 1);
+                char key[256], value[256];
+                strncpy(key, line, sizeof(key) - 1);
+                key[sizeof(key) - 1] = '\0';
+                strncpy(value, colon + 1, sizeof(value) - 1);
+                value[sizeof(value) - 1] = '\0';
                 
                 // Nettoyer les espaces
                 char *k = key;
@@ -346,28 +191,13 @@ int parse_yaml_rich(const char *filename, RichConfig *cfg) {
                     cfg->train_test_split = atof(v);
                 }
                 else if (strcmp(k, "early_stopping") == 0) {
-                    // Parsing booléen : true/false, 1/0, yes/no
-                    if (strstr(v, "true") || strstr(v, "yes") || strstr(v, "1")) {
-                        cfg->early_stopping = 1;
-                    } else {
-                        cfg->early_stopping = 0;
-                    }
+                    cfg->early_stopping = (strstr(v, "true") || strstr(v, "yes") || strstr(v, "1")) ? 1 : 0;
                 }
                 else if (strcmp(k, "optimized_parameters") == 0) {
-                    // Parsing booléen : true/false, 1/0, yes/no
-                    if (strstr(v, "true") || strstr(v, "yes") || strstr(v, "1")) {
-                        cfg->optimized_parameters = 1;
-                    } else {
-                        cfg->optimized_parameters = 0;
-                    }
+                    cfg->optimized_parameters = (strstr(v, "true") || strstr(v, "yes") || strstr(v, "1")) ? 1 : 0;
                 }
                 else if (strcmp(k, "is_image_dataset") == 0) {
-                    // Parsing booléen : true/false, 1/0, yes/no
-                    if (strstr(v, "true") || strstr(v, "yes") || strstr(v, "1")) {
-                        cfg->is_image_dataset = 1;
-                    } else {
-                        cfg->is_image_dataset = 0;
-                    }
+                    cfg->is_image_dataset = (strstr(v, "true") || strstr(v, "yes") || strstr(v, "1")) ? 1 : 0;
                 }
                 else if (strcmp(k, "image_train_dir") == 0) {
                     strncpy(cfg->image_train_dir, v, sizeof(cfg->image_train_dir) - 1);
@@ -393,34 +223,45 @@ int parse_yaml_rich(const char *filename, RichConfig *cfg) {
                 else if (strcmp(k, "image_channels") == 0) {
                     cfg->image_channels = atoi(v);
                 }
+                else if (strcmp(k, "input_cols") == 0) {
+                    cfg->input_cols = atoi(v);
+                }
+                else if (strcmp(k, "output_cols") == 0) {
+                    cfg->output_cols = atoi(v);
+                }
+                else if (strcmp(k, "dataset") == 0) {
+                    strncpy(cfg->dataset, v, sizeof(cfg->dataset) - 1);
+                    cfg->dataset[sizeof(cfg->dataset) - 1] = '\0';
+                    clean_value(cfg->dataset);
+                }
+                else if (strcmp(k, "dataset_name") == 0) {
+                    strncpy(cfg->dataset_name, v, sizeof(cfg->dataset_name) - 1);
+                    cfg->dataset_name[sizeof(cfg->dataset_name) - 1] = '\0';
+                    clean_value(cfg->dataset_name);
+                }
                 
                 *colon = ':';  // Restaurer le caractère original
             }
-            continue;
-        }
-        
-        // Cas spécial: si on n'a trouvé aucun configurateur, on ajoute les méthodes par défaut
-        if (cfg->num_neuroplast_methods == 0) {
-            cfg->num_neuroplast_methods = 1;
-            strcpy(cfg->neuroplast_methods[0].name, "standard");
-        }
-        
-        if (cfg->num_activations == 0) {
-            cfg->num_activations = 1;
-            strcpy(cfg->activations[0].name, "sigmoid");
-        }
-        
-        if (cfg->num_optimizers == 0) {
-            cfg->num_optimizers = 1;
-            strcpy(cfg->optimizers[0].name, "adam");
         }
     }
     
     fclose(file);
     
-    // Si aucune dimension n'a été trouvée, utiliser des valeurs par défaut
-    if (cfg->input_cols == 0) cfg->input_cols = 10;  // Valeur par défaut
-    if (cfg->output_cols == 0) cfg->output_cols = 1; // Valeur par défaut binaire
+    // Ajouter les méthodes par défaut si nécessaire
+    if (cfg->num_neuroplast_methods == 0) {
+        cfg->num_neuroplast_methods = 1;
+        strcpy(cfg->neuroplast_methods[0].name, "standard");
+    }
+    
+    if (cfg->num_activations == 0) {
+        cfg->num_activations = 1;
+        strcpy(cfg->activations[0].name, "relu");
+    }
+    
+    if (cfg->num_optimizers == 0) {
+        cfg->num_optimizers = 1;
+        strcpy(cfg->optimizers[0].name, "adam");
+    }
     
     return 1;
 }

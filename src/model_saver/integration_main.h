@@ -13,10 +13,15 @@
  * des 10 meilleurs modèles dans votre boucle d'entraînement existante.
  */
 
-// Initialiser le système de sauvegarde des modèles
+// Fonctions d'intégration du Model Saver
+
+// Initialiser le système de sauvegarde avec nom de dataset spécifique
+int init_model_saver_with_dataset(const char *base_directory, const char *dataset_name);
+
+// Initialiser le système de sauvegarde (version legacy)
 int init_model_saver(const char *save_directory);
 
-// Évaluer et potentiellement sauvegarder un modèle pendant l'entraînement
+// Évaluer et potentiellement sauvegarder un modèle
 int evaluate_and_save_model(NeuralNetwork *network, Trainer *trainer, 
                            Dataset *train_data, Dataset *val_data, int epoch);
 

@@ -44,6 +44,7 @@ typedef struct {
     size_t input_cols;
     size_t output_cols;
     char dataset_yaml[256];
+    char dataset_name[64];         // Nom du dataset pour organisation des modèles (ex: "chest_xray", "cancer", "diabetes")
 
     // Configuration pour le traitement d'images
     char image_train_dir[256];     // Répertoire d'entraînement (obligatoire)

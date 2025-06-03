@@ -22,7 +22,6 @@ gcc -O3 -march=native -o neuroplast-ann \
     src/matrix.c \
     src/memory.c \
     src/yaml_parser_rich.c \
-    src/yaml_parser.c \
     src/yaml/lexer.c \
     src/yaml/nodes.c \
     src/yaml/parser.c \
@@ -79,7 +78,10 @@ if [ $? -eq 0 ]; then
     echo "   🏆 Sauvegarde automatique des 10 meilleurs modèles"
     echo "   💾 Formats PTH (binaire) + H5 (JSON-like)"
     echo "   🐍 Interface Python générée automatiquement"
-    echo "   📁 Dossier: ./best_models_neuroplast/"
+    echo "   📁 Dossiers spécifiques par dataset:"
+    echo "      - ./best_models_neuroplast_chest_xray/"
+    echo "      - ./best_models_neuroplast_cancer/"
+    echo "      - ./best_models_neuroplast_diabetes/"
     echo ""
 else
     echo "❌ Erreur de compilation!"

@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include "model_saver.h"
 #include "../neural/network.h"
 #include "../training/trainer.h"
@@ -15,11 +16,19 @@
 // Variables globales pour la sauvegarde des modèles
 static ModelSaver *global_model_saver = NULL;
 
-// Initialiser le système de sauvegarde des modèles
-int init_model_saver(const char *save_directory) {
+// Initialiser le système de sauvegarde des modèles avec nom de dataset
+int init_model_saver_with_dataset(const char *base_directory, const char *dataset_name) {
     if (global_model_saver) {
         printf("⚠️  ModelSaver déjà initialisé\n");
         return 0;
+    }
+    
+    // Créer le répertoire spécifique au dataset
+    char save_directory[512];
+    if (dataset_name && strlen(dataset_name) > 0) {
+        snprintf(save_directory, sizeof(save_directory), "%s_%s", base_directory, dataset_name);
+    } else {
+        snprintf(save_directory, sizeof(save_directory), "%s_default", base_directory);
     }
     
     global_model_saver = model_saver_create(save_directory);
@@ -28,8 +37,14 @@ int init_model_saver(const char *save_directory) {
         return -1;
     }
     
-    printf("✅ ModelSaver initialisé: %s\n", save_directory);
+    printf("✅ ModelSaver initialisé pour dataset '%s': %s\n", 
+           dataset_name ? dataset_name : "default", save_directory);
     return 0;
+}
+
+// Initialiser le système de sauvegarde des modèles (version legacy)
+int init_model_saver(const char *save_directory) {
+    return init_model_saver_with_dataset(save_directory, NULL);
 }
 
 // Évaluer et potentiellement sauvegarder un modèle

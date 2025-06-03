@@ -1,0 +1,67 @@
+# Configuration NEUROPLAST-ANN v4.3 pour Diabetes Dataset
+# ========================================================
+# Dataset: Diabetes prediction (données tabulaires)
+# Organisation automatique: best_models_neuroplast_diabetes/
+
+# NOUVEAU v4.3: Nom du dataset pour organisation automatique
+dataset_name: "diabetes"
+
+# Type de dataset
+is_image_dataset: false
+
+# Chemin vers les données
+dataset: "datasets/diabetes.csv"
+
+# Paramètres d'entraînement
+batch_size: 32
+max_epochs: 100
+learning_rate: 0.001
+early_stopping: true
+patience: 15
+
+# Méthodes neuroplast à tester
+neuroplast_methods:
+  - standard
+  - adaptive
+
+# Fonctions d'activation à tester
+activations:
+  - relu
+  - neuroplast
+
+# Optimiseurs à tester
+optimizers:
+  - adamw
+  - adam
+
+# Métriques à calculer
+metrics:
+  - accuracy
+  - f1_score
+
+# Configuration Model Saver (automatique avec dataset_name)
+enable_model_saver: true
+save_best_models: 10  # Sauvegarder les 10 meilleurs modèles
+# model_save_path sera automatiquement: "./best_models_neuroplast_diabetes/"
+
+# Paramètres avancés
+dropout_rate: 0.2
+l2_regularization: 0.001
+momentum: 0.9
+
+# Gestion des classes (équilibré pour diabetes)
+class_weights: [1.0, 1.0]
+
+# Paramètres d'optimisation
+beta1: 0.9
+beta2: 0.999
+epsilon: 1e-8
+weight_decay: 0.01
+
+# Export des métriques
+metrics_export: true
+csv_export: true
+
+# Description
+name: "Diabetes Prediction - Simple Configuration"
+description: "Configuration optimisée pour la prédiction du diabète avec dataset standard" 

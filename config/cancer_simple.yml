@@ -1,6 +1,12 @@
 # Configuration simple pour Cancer du sein - Dataset numérique
 # Dataset: datasets/Cancer_neuroplast.csv (format optimisé)
 
+# Type de dataset (OBLIGATOIRE)
+is_image_dataset: false  # Spécifie que c'est un dataset tabulaire (CSV)
+
+# Identification du dataset pour organisation des modèles
+dataset_name: "cancer"
+
 dataset: "datasets/Cancer_neuroplast.csv"
 input_cols: 30    # 30 features cancer (après target)
 output_cols: 1    # Classification binaire (1=Malignant, 0=Benign)

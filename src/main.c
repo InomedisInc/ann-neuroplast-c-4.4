@@ -32,16 +32,28 @@
 #include "colored_output.h"
 #include "model_saver/model_saver.h"
 
+// Variables globales pour accéder aux arguments de ligne de commande
+static int argc_global = 0;
+static char **argv_global = NULL;
+
 // 🎯 INTERFACE SIMPLIFIÉE POUR MODEL_SAVER
 // ========================================
 
 // Variable globale pour le ModelSaver
 static ModelSaver *global_model_saver = NULL;
 
-// Initialiser le système de sauvegarde des 10 meilleurs modèles
-int init_best_models_manager(const char *save_directory) {
+// Initialiser le système de sauvegarde des 10 meilleurs modèles avec nom de dataset
+int init_best_models_manager_with_dataset(const char *base_directory, const char *dataset_name) {
     if (global_model_saver) {
         return 0; // Déjà initialisé
+    }
+    
+    // Créer le répertoire spécifique au dataset
+    char save_directory[512];
+    if (dataset_name && strlen(dataset_name) > 0) {
+        snprintf(save_directory, sizeof(save_directory), "%s_%s", base_directory, dataset_name);
+    } else {
+        snprintf(save_directory, sizeof(save_directory), "%s_default", base_directory);
     }
     
     global_model_saver = model_saver_create(save_directory);
@@ -50,8 +62,14 @@ int init_best_models_manager(const char *save_directory) {
         return -1;
     }
     
-    printf("✅ Gestionnaire des 10 meilleurs modèles initialisé: %s\n", save_directory);
+    printf("✅ Gestionnaire des 10 meilleurs modèles initialisé pour dataset '%s': %s\n", 
+           dataset_name ? dataset_name : "default", save_directory);
     return 0;
+}
+
+// Initialiser le système de sauvegarde des 10 meilleurs modèles (version legacy)
+int init_best_models_manager(const char *save_directory) {
+    return init_best_models_manager_with_dataset(save_directory, NULL);
 }
 
 // Ajouter un modèle candidat aux 10 meilleurs
@@ -973,6 +991,8 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
     RichConfig dataset_config;
     memset(&dataset_config, 0, sizeof(RichConfig));
     
+    printf("🔧 Chargement de la configuration depuis: %s\n", config_path);
+    
     if (!parse_yaml_rich_config(config_path, &dataset_config)) {
         printf("⚠️ Impossible de charger la configuration depuis %s\n", config_path);
         printf("⚠️ Création d'un dataset simulé à la place\n");
@@ -981,6 +1001,12 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
         dataset_config.is_image_dataset = 0;  // Dataset tabulaire
         dataset_config.input_cols = 8;
         dataset_config.output_cols = 1;
+        strcpy(dataset_config.dataset_name, "simulated"); // Nom par défaut pour dataset simulé
+    } else {
+        printf("✅ Configuration chargée avec succès\n");
+        printf("📊 Dataset name lu: '%s'\n", dataset_config.dataset_name);
+        printf("📊 Is image dataset: %d\n", dataset_config.is_image_dataset);
+        printf("📊 Dataset path: '%s'\n", dataset_config.dataset);
     }
     
     // Charger le dataset selon la configuration (images ou tabulaire)
@@ -1090,10 +1116,12 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
     
     // 🎯 INITIALISER LE SYSTÈME DE SAUVEGARDE DES 10 MEILLEURS MODÈLES
     printf("🔧 Initialisation du système de sauvegarde des 10 meilleurs modèles...\n");
-    if (init_best_models_manager("./best_models_neuroplast") != 0) {
+    
+    // Utiliser le dataset_name de la configuration pour créer un répertoire spécifique
+    const char *dataset_name = (strlen(dataset_config.dataset_name) > 0) ? dataset_config.dataset_name : "default";
+    if (init_best_models_manager_with_dataset("./best_models_neuroplast", dataset_name) != 0) {
         printf("⚠️ Erreur: Impossible d'initialiser le gestionnaire, continuons sans sauvegarde\n");
     } else {
-        printf("✅ Gestionnaire des 10 meilleurs modèles initialisé: ./best_models_neuroplast/\n");
         printf("💾 Sauvegarde automatique des 10 meilleurs modèles activée\n");
     }
     
@@ -1820,14 +1848,34 @@ int test_all(const RichConfig *cfg) {
     printf("🎯 Dataset : Médical simulé (800 échantillons)\n\n");
     
     // Appeler la fonction de test existante avec les paramètres appropriés
+    // Utiliser le fichier de configuration passé en paramètre s'il existe
+    const char *config_file = "config/test_convergence.yml"; // Valeur par défaut
+    
+    // Parcourir les arguments pour trouver --config
+    for (int i = 1; i < argc_global - 1; i++) {
+        if (strcmp(argv_global[i], "--config") == 0) {
+            config_file = argv_global[i + 1];
+            printf("📁 Utilisation du fichier de configuration: %s\n", config_file);
+            break;
+        }
+    }
+    
+    if (strcmp(config_file, "config/test_convergence.yml") == 0) {
+        printf("📁 Utilisation de la configuration par défaut: %s\n", config_file);
+    }
+    
     return test_all_with_real_dataset(neuroplast_methods, num_methods,
                                      optimizers, num_optimizers,
                                      activations, num_activations,
-                                     "config/test_convergence.yml", 150); // AUGMENTER LES ÉPOQUES DE 100 À 150
+                                     config_file, 150); // AUGMENTER LES ÉPOQUES DE 100 À 150
 }
 
 // Fonction main pour gérer les modes de test
 int main(int argc, char *argv[]) {
+    // Sauvegarder les arguments globalement
+    argc_global = argc;
+    argv_global = argv;
+    
     // Initialiser le générateur de nombres aléatoires
     srand(time(NULL));
     
@@ -1926,3 +1974,4 @@ int main(int argc, char *argv[]) {
     
     return EXIT_SUCCESS;
 }
+

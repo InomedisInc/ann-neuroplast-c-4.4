@@ -1,29 +1,48 @@
-# Configuration simplifiée pour le dataset d'images Chest X-Ray
-# Dataset: Images de radiographies thoraciques pour détection de pneumonie
+is_image_dataset: true
 
-# Configuration de base
+# Identification du dataset pour organisation des modèles
+dataset_name: "chest_xray"
+
+# Répertoires d'images séparés (obligatoires: train et test, optionnel: val)
+image_train_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/train"
+image_test_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/test"
+image_val_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/val"
+
+# Dimensions des images
+image_width: 128
+image_height: 128
+image_channels: 3
+
+# Paramètres d'entraînement
 batch_size: 16
 max_epochs: 50
 learning_rate: 0.001
 early_stopping: true
 patience: 10
 
-# Méthodes neuroplast
+# Architecture CNN
+cnn_architecture: true
+cnn_filters: [32, 64, 128]
+cnn_kernel_sizes: [3, 3, 3]
+cnn_pool_sizes: [2, 2, 2]
+cnn_dropout: 0.25
+
+# Méthodes neuroplast (format simple)
 neuroplast_methods:
-  - name: "standard"
-  - name: "adaptive"
+  - standard
+  - adaptive
 
-# Fonctions d'activation
+# Fonctions d'activation (format simple)
 activations:
-  - name: "relu"
-  - name: "gelu"
+  - relu
+  - gelu
 
-# Optimiseurs
+# Optimiseurs (format simple)
 optimizers:
-  - name: "adam"
-  - name: "adamw"
+  - adam
+  - adamw
 
-# Métriques
+# Métriques (format simple)
 metrics:
-  - name: "accuracy"
-  - name: "f1_score" 
+  - accuracy
+  - f1_score

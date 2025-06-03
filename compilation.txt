@@ -1,76 +1,32 @@
-# NEUROPLAST-ANN v4.2 - GUIDE DE COMPILATION COMPLET
-# ===================================================
-# Framework IA Modulaire en C avec Support Multi-Modal (Tabulaire + Images)
-# Performance garantie : 95%+ d'accuracy automatique
-# NOUVEAU v4.2: Support complet des images (JPEG, PNG, BMP, TGA)
-# NOUVEAU v4.2: Système de barres de progression dual-zone révolutionnaire
-# NOUVEAU v4.2: Sauvegarde automatique des 10 meilleurs modèles (Model Saver)
-# Toutes les commandes testées et validées ✅
+# NEUROPLAST-ANN v4.3 - Guide de Compilation Détaillé
 
-# ==================================================
-# 🚀 COMPILATION OPTIMISÉE POUR >95% ACCURACY (RECOMMANDÉE)
-# ==================================================
+```
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    🔧 GUIDE DE COMPILATION NEUROPLAST-ANN v4.3 🔧              ║
+║                                                                               ║
+║  Framework IA Modulaire en C avec Organisation Automatique par Dataset       ║
+║                        (c) Fabrice | 2024-2025                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+```
 
-gcc -O3 -march=native -o neuroplast-ann \
-    src/main.c \
-    src/adaptive_optimizer.c \
-    src/progress_bar.c \
-    src/colored_output.c \
-    src/args_parser.c \
-    src/rich_config.c \
-    src/config.c \
-    src/math_utils.c \
-    src/matrix.c \
-    src/memory.c \
-    src/yaml_parser_rich.c \
-    src/yaml_parser.c \
-    src/yaml/lexer.c \
-    src/yaml/nodes.c \
-    src/yaml/parser.c \
-    src/data/data_loader.c \
-    src/data/image_loader.c \
-    src/data/dataset.c \
-    src/data/preprocessing.c \
-    src/data/split.c \
-    src/neural/activation.c \
-    src/neural/backward.c \
-    src/neural/forward.c \
-    src/neural/layer.c \
-    src/neural/network.c \
-    src/neural/network_simple.c \
-    src/neural/neuroplast.c \
-    src/optimizers/sgd.c \
-    src/optimizers/adam.c \
-    src/optimizers/adamw.c \
-    src/optimizers/rmsprop.c \
-    src/optimizers/lion.c \
-    src/optimizers/adabelief.c \
-    src/optimizers/radam.c \
-    src/optimizers/adamax.c \
-    src/optimizers/nadam.c \
-    src/optimizers/optimizer.c \
-    src/training/trainer.c \
-    src/training/standard.c \
-    src/training/adaptive.c \
-    src/training/advanced.c \
-    src/training/bayesian.c \
-    src/training/progressive.c \
-    src/training/swarm.c \
-    src/training/propagation.c \
-    src/evaluation/metrics.c \
-    src/evaluation/confusion_matrix.c \
-    src/evaluation/f1_score.c \
-    src/evaluation/roc.c \
-    -lm -I./src
+## 🎯 COMPILATION RECOMMANDÉE v4.3 (avec Model Saver par Dataset)
 
-# ==================================================
-# 🏆 COMPILATION AVEC MODEL SAVER (NOUVEAU v4.2)
-# ==================================================
-
-# Script de compilation automatique avec Model Saver intégré
+### 🏆 Script de Compilation Automatique (RECOMMANDÉ)
+```bash
+# Utiliser le script de compilation intégré
 ./compile_with_model_saver.sh
+```
 
-# OU compilation manuelle avec tous les fichiers Model Saver
+Ce script compile automatiquement avec :
+- ✅ Tous les fichiers source nécessaires
+- ✅ Système Model Saver avec organisation par dataset
+- ✅ Support des images et données tabulaires
+- ✅ Optimisations de performance (-O3 -march=native)
+- ✅ Toutes les dépendances incluses
+
+### 🔧 Compilation Manuelle Complète v4.3
+
+```bash
 gcc -O3 -march=native -o neuroplast-ann \
     src/main.c \
     src/adaptive_optimizer.c \
@@ -122,670 +78,140 @@ gcc -O3 -march=native -o neuroplast-ann \
     src/evaluation/f1_score.c \
     src/evaluation/roc.c \
     src/model_saver/model_saver.c \
-    src/model_saver/model_saver_core.c \
-    src/model_saver/model_saver_pth.c \
-    src/model_saver/model_saver_h5.c \
-    src/model_saver/model_saver_utils.c \
-    src/model_saver/integration_main.c \
+    src/model_saver/file_utils.c \
+    src/model_saver/json_writer.c \
+    src/model_saver/python_interface.c \
     -lm -I./src
+```
 
-# ==================================================
-# 🎯 FONCTIONNALITÉS MODEL SAVER
-# ==================================================
+## 🆕 NOUVEAUTÉS v4.3 - Organisation par Dataset
 
-# ✅ Sauvegarde automatique des 10 meilleurs modèles
-# ✅ Score composite pondéré (train 40% + val 40% + loss 20%)
-# ✅ Formats multiples: PTH (binaire) + H5 (JSON-like)
-# ✅ Interface Python générée automatiquement (model_loader.py)
-# ✅ Métadonnées complètes: accuracy, loss, époque, optimiseur, architecture
-# ✅ Classement intelligent avec affichage final
-# ✅ Dossier organisé: ./best_models_neuroplast/
-# ✅ Fichier d'informations: best_models_info.json
-# ✅ Intégration transparente avec --test-all
+### 📁 Fichiers Ajoutés/Modifiés pour v4.3
 
-# ==================================================
-# 🎮 COMPILATION DÉMONSTRATION BARRES DE PROGRESSION (NOUVEAU v4.2)
-# ==================================================
+#### **Nouveaux Fichiers Model Saver**
+- `src/model_saver/model_saver.c` - Gestionnaire principal avec support dataset
+- `src/model_saver/file_utils.c` - Utilitaires fichiers
+- `src/model_saver/json_writer.c` - Export JSON
+- `src/model_saver/python_interface.c` - Interface Python
+- `src/model_saver/integration_main.h` - Intégration avec dataset_name
 
-# Compilation de la démonstration du système dual-zone
-gcc -o test_progress_demo test_progress_demo.c \
-    src/progress_bar.c \
-    src/colored_output.c \
-    -I./src
+#### **Fichiers Modifiés pour v4.3**
+- `src/main.c` - Support dataset_name et init_best_models_manager_with_dataset()
+- `src/rich_config.h` - Ajout du champ dataset_name[64]
+- `src/yaml_parser_rich.c` - Parsing du champ dataset_name
 
-# Lancement de la démonstration
-./test_progress_demo
+#### **Configurations avec Dataset Name**
+- `config/cancer_simple.yml` - dataset_name: "cancer"
+- `config/chest_xray_simple.yml` - dataset_name: "chest_xray"
+- `config/diabetes_simple.yml` - dataset_name: "diabetes" (nouveau)
 
-# Cette démonstration montre :
-# ✅ Élimination des superpositions de texte
-# ✅ Zones d'affichage bien séparées (barres + informations)
-# ✅ Couleurs et émojis améliorés avec design Unicode
-# ✅ Positionnement fixe et stable des éléments
-# ✅ Métriques temps réel sans interférence visuelle
-# ✅ Barres hiérarchiques (Combinaisons → Essais → Époques)
-# ✅ Gradient de couleurs Rouge→Jaune→Vert selon l'avancement
+## 🔧 OPTIONS DE COMPILATION
 
-# ==================================================
-# 🎯 OPTIONS D'OPTIMISATION EXPLIQUÉES
-# ==================================================
+### 🚀 Compilation Optimisée (Production)
+```bash
+gcc -O3 -march=native -DNDEBUG -o neuroplast-ann [fichiers...] -lm -I./src
+```
+- **-O3** : Optimisation maximale
+- **-march=native** : Optimisation pour le processeur local
+- **-DNDEBUG** : Désactive les assertions de debug
 
-# -O3              : Optimisation maximale du compilateur
-# -march=native    : Optimisation pour le processeur local (AVX, SSE, etc.)
-# -lm              : Liaison avec la bibliothèque mathématique
-# -I./src          : Répertoire d'inclusion pour les headers
+### 🐛 Compilation Debug
+```bash
+gcc -g -O0 -Wall -Wextra -DDEBUG -o neuroplast-ann-debug [fichiers...] -lm -I./src
+```
+- **-g** : Informations de debug
+- **-O0** : Pas d'optimisation
+- **-Wall -Wextra** : Tous les warnings
+- **-DDEBUG** : Active les messages de debug
 
-# ==================================================
-# 🖼️ COMPILATION TEST IMAGES STANDALONE (NOUVEAU v4.2)
-# ==================================================
+### 🔍 Compilation avec Sanitizers (Développement)
+```bash
+gcc -g -O1 -fsanitize=address -fsanitize=undefined -o neuroplast-ann-sanitized [fichiers...] -lm -I./src
+```
+- **-fsanitize=address** : Détection des erreurs mémoire
+- **-fsanitize=undefined** : Détection des comportements indéfinis
 
-gcc -o test_images test_images.c \
-    src/data/image_loader.c \
-    src/data/dataset.c \
-    src/colored_output.c \
-    -lm -I./src
+### ⚡ Compilation Rapide (Tests)
+```bash
+gcc -O1 -o neuroplast-ann-fast [fichiers...] -lm -I./src
+```
+- **-O1** : Optimisation légère pour compilation rapide
 
-# Test du système de chargement d'images
-./test_images
+## 🎯 COMPILATION PAR COMPOSANTS
 
-# ==================================================
-# 🏆 COMPILATION ET TEST MODEL SAVER STANDALONE
-# ==================================================
-
-# Test de la librairie Model Saver en mode standalone
-cd src/model_saver
-make clean && make test
-
-# Vérification des fichiers générés
-ls -la saved_models/
-
-# Retour au répertoire principal
-cd ../..
-
-# ==================================================
-# 🔧 COMPILATION DEBUG (Développement)
-# ==================================================
-
-gcc -g -O0 -Wall -Wextra -DDEBUG -o neuroplast-ann-debug \
+### 🧠 Core Framework (Minimal)
+```bash
+gcc -O3 -o neuroplast-core \
     src/main.c \
-    src/adaptive_optimizer.c \
-    src/progress_bar.c \
-    src/colored_output.c \
-    src/args_parser.c \
     src/rich_config.c \
-    src/config.c \
-    src/math_utils.c \
-    src/matrix.c \
-    src/memory.c \
     src/yaml_parser_rich.c \
     src/yaml_parser.c \
     src/yaml/lexer.c \
     src/yaml/nodes.c \
     src/yaml/parser.c \
-    src/data/data_loader.c \
+    src/neural/network_simple.c \
+    src/neural/activation.c \
+    src/optimizers/adam.c \
+    src/optimizers/optimizer.c \
+    src/training/standard.c \
+    src/evaluation/metrics.c \
+    -lm -I./src
+```
+
+### 🏆 Avec Model Saver par Dataset
+```bash
+gcc -O3 -o neuroplast-with-saver \
+    [fichiers core...] \
+    src/model_saver/model_saver.c \
+    src/model_saver/file_utils.c \
+    src/model_saver/json_writer.c \
+    src/model_saver/python_interface.c \
+    -lm -I./src
+```
+
+### 🖼️ Avec Support Images
+```bash
+gcc -O3 -o neuroplast-with-images \
+    [fichiers core...] \
     src/data/image_loader.c \
     src/data/dataset.c \
     src/data/preprocessing.c \
-    src/data/split.c \
-    src/neural/activation.c \
-    src/neural/backward.c \
-    src/neural/forward.c \
-    src/neural/layer.c \
-    src/neural/network.c \
-    src/neural/network_simple.c \
-    src/neural/neuroplast.c \
-    src/optimizers/sgd.c \
-    src/optimizers/adam.c \
-    src/optimizers/adamw.c \
-    src/optimizers/rmsprop.c \
-    src/optimizers/lion.c \
-    src/optimizers/adabelief.c \
-    src/optimizers/radam.c \
-    src/optimizers/adamax.c \
-    src/optimizers/nadam.c \
-    src/optimizers/optimizer.c \
-    src/training/trainer.c \
-    src/training/standard.c \
-    src/training/adaptive.c \
-    src/training/advanced.c \
-    src/training/bayesian.c \
-    src/training/progressive.c \
-    src/training/swarm.c \
-    src/training/propagation.c \
-    src/evaluation/metrics.c \
-    src/evaluation/confusion_matrix.c \
-    src/evaluation/f1_score.c \
-    src/evaluation/roc.c \
     -lm -I./src
+```
 
-# ==================================================
-# 🎯 OPTIONS DEBUG EXPLIQUÉES
-# ==================================================
-
-# -g               : Informations de débogage
-# -O0              : Pas d'optimisation (pour debugging)
-# -Wall            : Tous les warnings standards
-# -Wextra          : Warnings supplémentaires
-# -DDEBUG          : Active les macros de debug
-
-# ==================================================
-# ⚡ COMPILATION ULTRA-OPTIMISÉE (Performance extrême)
-# ==================================================
-
-gcc -O3 -march=native -mtune=native -flto -funroll-loops -ffast-math \
-    -o neuroplast-ann-ultra \
-    src/main.c \
-    src/adaptive_optimizer.c \
+### 🎮 Avec Interface Avancée
+```bash
+gcc -O3 -o neuroplast-with-ui \
+    [fichiers core...] \
     src/progress_bar.c \
     src/colored_output.c \
-    src/args_parser.c \
-    src/rich_config.c \
-    src/config.c \
-    src/math_utils.c \
-    src/matrix.c \
-    src/memory.c \
-    src/yaml_parser_rich.c \
-    src/yaml_parser.c \
-    src/yaml/lexer.c \
-    src/yaml/nodes.c \
-    src/yaml/parser.c \
-    src/data/data_loader.c \
-    src/data/image_loader.c \
-    src/data/dataset.c \
-    src/data/preprocessing.c \
-    src/data/split.c \
-    src/neural/activation.c \
-    src/neural/backward.c \
-    src/neural/forward.c \
-    src/neural/layer.c \
-    src/neural/network.c \
-    src/neural/network_simple.c \
-    src/neural/neuroplast.c \
-    src/optimizers/sgd.c \
-    src/optimizers/adam.c \
-    src/optimizers/adamw.c \
-    src/optimizers/rmsprop.c \
-    src/optimizers/lion.c \
-    src/optimizers/adabelief.c \
-    src/optimizers/radam.c \
-    src/optimizers/adamax.c \
-    src/optimizers/nadam.c \
-    src/optimizers/optimizer.c \
-    src/training/trainer.c \
-    src/training/standard.c \
-    src/training/adaptive.c \
-    src/training/advanced.c \
-    src/training/bayesian.c \
-    src/training/progressive.c \
-    src/training/swarm.c \
-    src/training/propagation.c \
-    src/evaluation/metrics.c \
-    src/evaluation/confusion_matrix.c \
-    src/evaluation/f1_score.c \
-    src/evaluation/roc.c \
     -lm -I./src
+```
 
-# ==================================================
-# 🎯 OPTIONS ULTRA-OPTIMISÉES EXPLIQUÉES
-# ==================================================
+## 🔧 DÉPENDANCES ET PRÉREQUIS
 
-# -mtune=native    : Optimisation pour microarchitecture spécifique
-# -flto            : Link Time Optimization (optimisation inter-fichiers)
-# -funroll-loops   : Déroulage automatique des boucles
-# -ffast-math      : Optimisations mathématiques agressives (attention: peut affecter précision)
+### 📋 Dépendances Système
+- **GCC** : Version 7.0+ (support C11)
+- **Make** : Pour les scripts de compilation
+- **LibM** : Bibliothèque mathématique (-lm)
 
-# ==================================================
-# 🔧 COMPILATION AVEC SUPPORT OPENMP (Parallélisation)
-# ==================================================
+### 📦 Bibliothèques Incluses
+- **stb_image.h** : Chargement d'images (JPEG, PNG, BMP, TGA)
+- **Parser YAML** : Parser YAML custom intégré
+- **Colored Output** : Système d'affichage coloré
 
-gcc -O3 -march=native -fopenmp -o neuroplast-ann-parallel \
-    src/main.c \
-    src/adaptive_optimizer.c \
-    src/progress_bar.c \
-    src/colored_output.c \
-    src/args_parser.c \
-    src/rich_config.c \
-    src/config.c \
-    src/math_utils.c \
-    src/matrix.c \
-    src/memory.c \
-    src/yaml_parser_rich.c \
-    src/yaml_parser.c \
-    src/yaml/lexer.c \
-    src/yaml/nodes.c \
-    src/yaml/parser.c \
-    src/data/data_loader.c \
-    src/data/image_loader.c \
-    src/data/dataset.c \
-    src/data/preprocessing.c \
-    src/data/split.c \
-    src/neural/activation.c \
-    src/neural/backward.c \
-    src/neural/forward.c \
-    src/neural/layer.c \
-    src/neural/network.c \
-    src/neural/network_simple.c \
-    src/neural/neuroplast.c \
-    src/optimizers/sgd.c \
-    src/optimizers/adam.c \
-    src/optimizers/adamw.c \
-    src/optimizers/rmsprop.c \
-    src/optimizers/lion.c \
-    src/optimizers/adabelief.c \
-    src/optimizers/radam.c \
-    src/optimizers/adamax.c \
-    src/optimizers/nadam.c \
-    src/optimizers/optimizer.c \
-    src/training/trainer.c \
-    src/training/standard.c \
-    src/training/adaptive.c \
-    src/training/advanced.c \
-    src/training/bayesian.c \
-    src/training/progressive.c \
-    src/training/swarm.c \
-    src/training/propagation.c \
-    src/evaluation/metrics.c \
-    src/evaluation/confusion_matrix.c \
-    src/evaluation/f1_score.c \
-    src/evaluation/roc.c \
-    -lm -fopenmp -I./src
+### 🖥️ Compatibilité Plateformes
+- ✅ **Linux** : Ubuntu 18.04+, CentOS 7+, Debian 9+
+- ✅ **macOS** : 10.14+ (Mojave et plus récent)
+- ✅ **Windows** : WSL2, MinGW-w64, MSYS2
 
-# ==================================================
-# 🎯 COMPILATION POUR DIFFÉRENTES PLATEFORMES
-# ==================================================
+## 🚀 SCRIPTS DE COMPILATION
 
-# macOS (Apple Silicon M1/M2)
-gcc -O3 -mcpu=apple-a14 -o neuroplast-ann-macos \
-    [mêmes fichiers sources] \
-    -lm -I./src
+### 📄 compile_with_model_saver.sh
+```bash
+#!/bin/bash
+echo "🔧 Compilation NEUROPLAST-ANN v4.3 avec Model Saver par Dataset..."
 
-# Linux x86_64
-gcc -O3 -march=x86-64 -mtune=generic -o neuroplast-ann-linux \
-    [mêmes fichiers sources] \
-    -lm -I./src
-
-# Windows (avec MinGW)
-gcc -O3 -march=native -o neuroplast-ann.exe \
-    [mêmes fichiers sources] \
-    -lm -I./src
-
-# ==================================================
-# 🛠️ UTILITAIRES DE COMPILATION
-# ==================================================
-
-# Vérification des dépendances
-gcc --version
-which gcc
-
-# Compilation avec vérification syntaxe seulement
-gcc -fsyntax-only -I./src src/main.c
-
-# Compilation avec warnings maximum
-gcc -O3 -Wall -Wextra -Wpedantic -Wformat=2 -Wconversion \
-    -Wunused -Wundef -Wshadow -o neuroplast-ann-strict \
-    [mêmes fichiers sources] \
-    -lm -I./src
-
-# ==================================================
-# 📊 UTILISATION APRÈS COMPILATION
-# ==================================================
-
-# Compilation standard recommandée
-gcc -O3 -march=native -o neuroplast-ann [fichiers...] -lm -I./src
-
-# Test de fonctionnement
-./neuroplast-ann --help
-
-# 📋 DONNÉES TABULAIRES (CSV)
-# Optimiseur adaptatif pour 95%+ accuracy (RECOMMANDÉ)
-./neuroplast-ann --config config/cancer_simple.yml --test-all
-
-# Test exhaustif de toutes les combinaisons
-./neuroplast-ann --config config/test_convergence.yml --test-all
-
-# 🖼️ IMAGES (NOUVEAU v4.2)
-# Test avec images chest X-ray (pneumonie)
-./neuroplast-ann --config config/chest_xray_images.yml --test-all
-
-# Test simple de chargement d'images
-./test_images
-
-# Tests spécialisés rapides
-./neuroplast-ann --test-all-activations
-./neuroplast-ann --test-all-optimizers
-./neuroplast-ann --test-neuroplast-methods
-./neuroplast-ann --test-complete-combinations
-
-# ==================================================
-# 🏆 UTILISATION AVEC MODEL SAVER (NOUVEAU v4.2)
-# ==================================================
-
-# Compilation avec Model Saver intégré
-./compile_with_model_saver.sh
-
-# Test avec sauvegarde automatique des 10 meilleurs modèles
-./neuroplast-ann --config config/chest_xray_simple.yml --test-all
-
-# Résultat attendu:
-# ✅ Entraînement de tous les modèles
-# ✅ Évaluation et scoring automatique
-# ✅ Sauvegarde des 10 meilleurs dans ./best_models_neuroplast/
-# ✅ Génération de model_loader.py pour interface Python
-# ✅ Création de best_models_info.json avec métadonnées
-# ✅ Affichage du classement final des modèles
-
-# Vérification des fichiers générés
-ls -la best_models_neuroplast/
-
-# Contenu attendu:
-# model_1.pth/.h5          # Meilleur modèle (formats binaire + JSON)
-# model_2.pth/.h5          # Deuxième meilleur modèle
-# ...
-# model_10.pth/.h5         # Dixième meilleur modèle
-# best_models_info.json    # Métadonnées complètes
-# model_loader.py          # Interface Python générée
-
-# Test de l'interface Python générée
-cd best_models_neuroplast
-python3 -c "
-from model_loader import NeuralNetworkLoader
-loader = NeuralNetworkLoader()
-model = loader.load_model('model_1.h5')
-print(f'Meilleur modèle: {model[\"metadata\"][\"model_name\"]}')
-print(f'Accuracy: {model[\"metadata\"][\"train_accuracy\"]:.2%}')
-"
-
-# Test Model Saver standalone (pour validation)
-cd src/model_saver
-make clean && make test
-ls -la saved_models/
-cd ../..
-
-# ==================================================
-# 🎯 FONCTIONNALITÉS MODEL SAVER DÉTAILLÉES
-# ==================================================
-
-# Score Composite Automatique:
-# - 40% Accuracy d'entraînement
-# - 40% Accuracy de validation  
-# - 10% Inverse de la perte d'entraînement
-# - 10% Inverse de la perte de validation
-
-# Formats de Sauvegarde:
-# - PTH: Format binaire compact (~2.7KB par modèle)
-# - H5: Format JSON lisible (~9KB par modèle)
-
-# Métadonnées Sauvegardées:
-# - Nom du modèle (méthode+optimiseur+activation)
-# - Accuracy d'entraînement et validation
-# - Perte d'entraînement et validation
-# - Époque de sauvegarde
-# - Architecture du réseau
-# - Timestamp de création
-# - Score composite calculé
-
-# Interface Python Générée:
-# - Classe NeuralNetworkLoader
-# - Fonctions: load_model(), predict(), extract_weights_biases()
-# - Compatible avec NumPy et frameworks ML Python
-
-# ==================================================
-# 🆕 NOUVEAUTÉS v4.2 - SUPPORT IMAGES
-# ==================================================
-
-# ✅ Chargement automatique d'images (JPEG, PNG, BMP, TGA)
-# ✅ Détection automatique des classes (répertoires)
-# ✅ Redimensionnement intelligent (nearest neighbor)
-# ✅ Normalisation optimisée [-1,1] pour images
-# ✅ Mélange Fisher-Yates pour éviter les biais
-# ✅ Architectures adaptatives selon input_size
-# ✅ Support train/test/val avec val optionnel
-# ✅ Classification binaire et multi-classe
-# ✅ Intégration transparente avec données tabulaires
-
-# ==================================================
-# 🎯 OPTIMISATIONS v4.2 INTÉGRÉES
-# ==================================================
-
-# ✅ Support multi-modal (tabulaire + images)
-# ✅ Architectures adaptatives automatiques
-# ✅ Learning rates spécialisés par type de données
-# ✅ Normalisation optimisée par modalité
-# ✅ 10 fonctions d'activation (ajout de PReLU)
-# ✅ Interface unifiée pour tous types de données
-# ✅ Test standalone du système d'images
-# ✅ Configuration YAML étendue pour images
-# ✅ Sauvegarde automatique des meilleurs modèles
-# ✅ Interface Python pour utilisation des modèles sauvés
-
-# ==================================================
-# 📈 RÉSULTATS CONFIRMÉS v4.2
-# ==================================================
-
-# DONNÉES TABULAIRES (8 entrées)
-# Mode adaptatif: 95.00%+ accuracy ✅
-# Architectures: 8→128→64→1 à 8→1024→512→256→1
-
-# IMAGES (64 entrées = 8x8x1)
-# Mode adaptatif: 85-90% accuracy ✅
-# Architectures: 64→32→16→1 à 64→256→128→64→1
-# Test chest X-ray: 5,216 images, 2 classes (PNEUMONIA/NORMAL)
-
-# Export CSV automatique avec toutes les métriques
-# Classement TOP 5 des meilleures combinaisons
-# Support complet des métriques: Accuracy, Precision, Recall, F1, AUC-ROC
-# Sauvegarde automatique des 10 meilleurs modèles avec interface Python
-
-# ==================================================
-# 🔍 TROUBLESHOOTING COMPILATION
-# ==================================================
-
-# Erreur: "command not found"
-# Solution: Installer gcc
-sudo apt install gcc                    # Ubuntu/Debian
-brew install gcc                        # macOS
-# Ou utiliser clang sur macOS: remplacer gcc par clang
-
-# Erreur: "math.h not found"
-# Solution: Installer build-essential
-sudo apt install build-essential       # Ubuntu/Debian
-
-# Erreur: "cannot find -lm"
-# Solution: La bibliothèque math est manquante
-sudo apt install libc6-dev            # Ubuntu/Debian
-
-# Warning: "implicit declaration"
-# Solution: Vérifier les includes et -I./src
-
-# Erreur: "march=native not supported"
-# Solution: Utiliser -march=x86-64 ou retirer l'option
-
-# Erreur: "stb_image.h not found"
-# Solution: Le fichier est inclus dans src/data/stb_image.h
-
-# Erreur: Images ne se chargent pas
-# Solution: Vérifier les chemins dans la configuration YAML
-# Vérifier les permissions des répertoires d'images
-
-# ==================================================
-# 📁 STRUCTURE DES FICHIERS SOURCE v4.2
-# ==================================================
-
-src/
-├── main.c                    # Point d'entrée principal avec support multi-modal
-├── adaptive_optimizer.c      # Optimiseur temps réel pour 95%+ accuracy
-├── progress_bar.c            # Système dual-zone avec barres hiérarchiques
-├── colored_output.c          # Affichage coloré organisé
-├── args_parser.c             # Parsing des arguments de ligne de commande
-├── rich_config.c             # Configuration YAML riche avec support images
-├── config.c                  # Configuration de base
-├── math_utils.c              # Utilitaires mathématiques
-├── matrix.c                  # Opérations matricielles
-├── memory.c                  # Gestion mémoire
-├── yaml_parser_rich.c        # Parser YAML avancé avec champs images
-├── yaml_parser.c             # Parser YAML de base
-├── yaml/                     # Bibliothèque YAML
-│   ├── lexer.c              # Analyseur lexical YAML
-│   ├── nodes.c              # Nœuds YAML
-│   └── parser.c             # Parser YAML principal
-├── data/                     # Gestion des données multi-modal
-│   ├── data_loader.c        # Chargement universel (CSV + Images)
-│   ├── image_loader.c       # 🖼️ NOUVEAU: Traitement d'images complet
-│   ├── dataset.c            # Structure dataset unifiée
-│   ├── preprocessing.c      # Préprocessing des données
-│   ├── split.c              # Division train/test/validation
-│   └── stb_image.h          # 🖼️ NOUVEAU: Bibliothèque de chargement d'images
-├── neural/                   # Réseaux de neurones adaptatifs
-│   ├── activation.c         # 10 fonctions d'activation (ajout PReLU)
-│   ├── backward.c           # Rétropropagation optimisée
-│   ├── forward.c            # Propagation avant
-│   ├── layer.c              # Gestion des couches
-│   ├── network.c            # Réseau principal avec architectures adaptatives
-│   ├── network_simple.c     # Réseau simplifié optimisé
-│   └── neuroplast.c         # Activation NeuroPlast propriétaire
-├── optimizers/               # 9 optimiseurs avancés
-│   ├── sgd.c                # Stochastic Gradient Descent
-│   ├── adam.c               # Adam optimizer
-│   ├── adamw.c              # AdamW (recommandé)
-│   ├── rmsprop.c            # RMSprop
-│   ├── lion.c               # Lion optimizer
-│   ├── adabelief.c          # AdaBelief
-│   ├── radam.c              # RAdam
-│   ├── adamax.c             # Adamax
-│   ├── nadam.c              # Nesterov Adam
-│   └── optimizer.c          # Interface optimiseurs
-├── training/                 # 7 méthodes d'entraînement
-│   ├── trainer.c            # Interface entraînement
-│   ├── standard.c           # Entraînement standard
-│   ├── adaptive.c           # Entraînement adaptatif
-│   ├── advanced.c           # Techniques avancées
-│   ├── bayesian.c           # Optimisation bayésienne
-│   ├── progressive.c        # Entraînement progressif
-│   ├── swarm.c              # Intelligence d'essaim
-│   └── propagation.c        # Propagation optimisée
-├── evaluation/               # Métriques complètes
-│   ├── metrics.c            # Métriques principales
-│   ├── confusion_matrix.c   # Matrice de confusion
-│   ├── f1_score.c           # Score F1
-│   └── roc.c                # Courbe ROC et AUC
-└── test_images.c             # 🖼️ NOUVEAU: Test standalone du système d'images
-
-# ==================================================
-# 🖼️ CONFIGURATION IMAGES v4.2
-# ==================================================
-
-# Structure des répertoires d'images:
-dataset_images/
-├── train/
-│   ├── CLASSE1/
-│   │   ├── image1.jpg
-│   │   ├── image2.png
-│   │   └── ...
-│   └── CLASSE2/
-│       ├── image1.jpg
-│       └── ...
-├── test/
-│   ├── CLASSE1/
-│   └── CLASSE2/
-└── val/ (optionnel)
-    ├── CLASSE1/
-    └── CLASSE2/
-
-# Configuration YAML pour images:
-is_image_dataset: true
-image_train_dir: "/path/to/dataset/train"
-image_test_dir: "/path/to/dataset/test"
-image_val_dir: "/path/to/dataset/val"    # optionnel
-image_width: 8                           # largeur cible
-image_height: 8                          # hauteur cible
-image_channels: 1                        # 1=grayscale, 3=RGB
-
-# Formats supportés: JPEG, PNG, BMP, TGA
-# Redimensionnement automatique vers dimensions cibles
-# Normalisation: (pixel/255 - 0.5) * 2 → [-1, 1]
-
-# ==================================================
-# 🧪 TESTS SPÉCIALISÉS v4.2
-# ==================================================
-
-# Test du système d'images
-gcc -o test_images test_images.c src/data/image_loader.c src/data/dataset.c src/colored_output.c -lm -I./src
-./test_images
-
-# 🎮 Test du système de barres de progression dual-zone (NOUVEAU)
-gcc -o test_progress_demo test_progress_demo.c src/progress_bar.c src/colored_output.c -I./src
-./test_progress_demo
-
-# Test avec données tabulaires
-./neuroplast-ann --config config/cancer_simple.yml --test-all
-
-# Test avec images
-./neuroplast-ann --config config/chest_xray_images.yml --test-all
-
-# Tests rapides (2-5 minutes)
-./neuroplast-ann --test-all-activations      # 10 activations
-./neuroplast-ann --test-all-optimizers       # 9 optimiseurs
-./neuroplast-ann --test-neuroplast-methods   # 7 méthodes
-
-# ==================================================
-# 🎮 SYSTÈME DE BARRES DE PROGRESSION DUAL-ZONE v4.2
-# ==================================================
-
-# NOUVEAU: Interface révolutionnaire avec zones séparées
-# ✅ Élimination complète des superpositions de texte
-# ✅ Barres hiérarchiques: Combinaisons → Essais → Époques
-# ✅ Couleurs distinctes: Cyan (Général) / Jaune (Essais) / Vert (Époques)
-# ✅ Gradient de progression: Rouge → Jaune → Vert selon l'avancement
-# ✅ Zone d'informations séparée pour les détails d'entraînement
-# ✅ Design Unicode professionnel avec émojis contextuels
-# ✅ Métriques temps réel sans interférence visuelle
-# ✅ Positionnement fixe et stable des éléments
-
-# Compilation de la démonstration:
-gcc -o test_progress_demo test_progress_demo.c \
-    src/progress_bar.c \
-    src/colored_output.c \
-    -I./src
-
-# Lancement de la démonstration interactive:
-./test_progress_demo
-
-# La démonstration simule un entraînement complet avec:
-# - 3 combinaisons (méthode/optimiseur/activation)
-# - 5 essais par combinaison
-# - 10 époques par essai
-# - Métriques temps réel (Loss, Accuracy, F1, Precision, Recall)
-# - Résumés d'essais et de combinaisons
-# - Nettoyage automatique entre les combinaisons
-
-# Architecture du système d'affichage:
-# ┌─ EN-TÊTE PRINCIPAL (titre, configuration)
-# ├─ ZONE BARRES DE PROGRESSION (3 barres fixes)
-# │  ├─ GENERAL:  [████████████] 100.0% Combinaisons (3/3)
-# │  ├─ ESSAIS:   [████████████] 100.0% Essais (5/5) | Loss: 0.0234
-# │  └─ EPOQUES:  [████████████] 100.0% Époques (10/10) | Acc: 96.8%
-# └─ ZONE INFORMATIONS (détails d'entraînement)
-#    ├─ En-tête de combinaison
-#    ├─ Informations du réseau
-#    ├─ Métriques d'époque en temps réel
-#    └─ Résumés d'essais et de combinaisons
-
-# ==================================================
-# 🎉 CONCLUSION v4.2
-# ==================================================
-
-# NEUROPLAST-ANN v4.2 est optimisé pour:
-# ✅ Support multi-modal: Tabulaire + Images
-# ✅ Interface dual-zone révolutionnaire sans superpositions
-# ✅ 95%+ d'accuracy sur données tabulaires
-# ✅ 85-90% d'accuracy sur images (8x8)
-# ✅ Architectures adaptatives automatiques
-# ✅ 10 fonctions d'activation, 9 optimiseurs, 7 méthodes
-# ✅ Interface simple et unifiée avec design moderne
-# ✅ Export complet des résultats
-# ✅ Test standalone du système d'images
-# ✅ Démonstration interactive des barres de progression
-
-# Compilation recommandée complète:
 gcc -O3 -march=native -o neuroplast-ann \
     src/main.c \
     src/adaptive_optimizer.c \
@@ -836,9 +262,229 @@ gcc -O3 -march=native -o neuroplast-ann \
     src/evaluation/confusion_matrix.c \
     src/evaluation/f1_score.c \
     src/evaluation/roc.c \
+    src/model_saver/model_saver.c \
+    src/model_saver/file_utils.c \
+    src/model_saver/json_writer.c \
+    src/model_saver/python_interface.c \
     -lm -I./src
 
-# Test rapide multi-modal:
-# Tabulaire: ./neuroplast-ann --config config/cancer_simple.yml --test-all
-# Images:    ./neuroplast-ann --config config/chest_xray_images.yml --test-all
-# Barres:    ./test_progress_demo
+if [ $? -eq 0 ]; then
+    echo "✅ Compilation réussie ! Exécutable : ./neuroplast-ann"
+    echo "🏆 Model Saver par Dataset activé"
+    echo "📁 Répertoires automatiques : best_models_neuroplast_[dataset_name]/"
+else
+    echo "❌ Erreur de compilation"
+    exit 1
+fi
+```
+
+### 📄 compile_debug.sh
+```bash
+#!/bin/bash
+echo "🐛 Compilation DEBUG NEUROPLAST-ANN v4.3..."
+
+gcc -g -O0 -Wall -Wextra -DDEBUG -o neuroplast-ann-debug \
+    [mêmes fichiers que compile_with_model_saver.sh] \
+    -lm -I./src
+
+if [ $? -eq 0 ]; then
+    echo "✅ Compilation DEBUG réussie ! Exécutable : ./neuroplast-ann-debug"
+    echo "🐛 Messages de debug activés"
+else
+    echo "❌ Erreur de compilation DEBUG"
+    exit 1
+fi
+```
+
+## 🧪 TESTS DE COMPILATION
+
+### ✅ Test de Compilation Basique
+```bash
+# Test compilation minimale
+gcc -o test_compile src/main.c src/rich_config.c src/yaml_parser_rich.c -lm -I./src
+./test_compile --help
+```
+
+### 🏆 Test Model Saver par Dataset
+```bash
+# Compiler avec Model Saver
+./compile_with_model_saver.sh
+
+# Test avec dataset cancer
+./neuroplast-ann --config config/cancer_simple.yml --test-all
+
+# Vérifier création du répertoire
+ls -la | grep best_models_neuroplast_cancer
+```
+
+### 🖼️ Test Support Images
+```bash
+# Test chargement d'images
+gcc -o test_images test_images.c src/data/image_loader.c -lm -I./src
+./test_images
+```
+
+### 🎮 Test Interface Avancée
+```bash
+# Test barres de progression
+gcc -o test_progress test_progress_demo.c src/progress_bar.c src/colored_output.c -I./src
+./test_progress
+```
+
+## 🔧 RÉSOLUTION DES PROBLÈMES
+
+### ❌ Erreurs de Compilation Communes
+
+#### **Erreur : "undefined reference to math functions"**
+```bash
+# Solution : Ajouter -lm à la fin
+gcc [fichiers...] -lm -I./src
+```
+
+#### **Erreur : "stb_image.h not found"**
+```bash
+# Solution : Vérifier que le fichier existe
+ls src/data/stb_image.h
+# Si absent, télécharger depuis https://github.com/nothings/stb
+```
+
+#### **Erreur : "dataset_name undeclared"**
+```bash
+# Solution : Utiliser la version v4.3 avec rich_config.h mis à jour
+grep "dataset_name" src/rich_config.h
+```
+
+#### **Erreur : "model_saver functions not found"**
+```bash
+# Solution : Inclure tous les fichiers model_saver
+ls src/model_saver/
+# Utiliser compile_with_model_saver.sh
+```
+
+### 🐛 Debug des Problèmes
+
+#### **Compilation avec Informations Détaillées**
+```bash
+gcc -v -O3 [fichiers...] -lm -I./src 2>&1 | tee compilation.log
+```
+
+#### **Vérification des Symboles**
+```bash
+nm neuroplast-ann | grep dataset_name
+objdump -t neuroplast-ann | grep model_saver
+```
+
+#### **Test des Dépendances**
+```bash
+ldd neuroplast-ann  # Linux
+otool -L neuroplast-ann  # macOS
+```
+
+## 📊 OPTIMISATIONS DE PERFORMANCE
+
+### ⚡ Optimisations GCC
+```bash
+# Optimisation maximale
+-O3 -march=native -mtune=native -flto
+
+# Optimisation pour taille
+-Os -march=native
+
+# Optimisation pour debug
+-Og -g
+```
+
+### 🎯 Optimisations Spécifiques
+```bash
+# Pour processeurs modernes
+-march=native -mtune=native
+
+# Pour compatibilité maximale
+-march=x86-64
+
+# Pour ARM (Apple Silicon)
+-mcpu=native
+```
+
+### 📈 Profiling et Optimisation
+```bash
+# Compilation avec profiling
+gcc -pg -O2 [fichiers...] -lm -I./src
+
+# Exécution pour générer profil
+./neuroplast-ann --config config/cancer_simple.yml --test-all
+
+# Analyse du profil
+gprof neuroplast-ann gmon.out > analysis.txt
+```
+
+## 🎯 UTILISATION POST-COMPILATION
+
+### 🚀 Test Rapide après Compilation
+```bash
+# Vérifier que l'exécutable fonctionne
+./neuroplast-ann --help
+
+# Test avec dataset cancer (organisation automatique)
+./neuroplast-ann --config config/cancer_simple.yml --test-all
+
+# Vérifier création du répertoire spécifique
+ls -la best_models_neuroplast_cancer/
+```
+
+### 📁 Structure Générée Automatiquement
+```
+📁 Après compilation et exécution :
+├── 📄 neuroplast-ann                          # Exécutable principal
+├── 📁 best_models_neuroplast_cancer/          # Modèles cancer (auto-créé)
+├── 📁 best_models_neuroplast_chest_xray/      # Modèles chest X-ray (auto-créé)
+├── 📁 best_models_neuroplast_diabetes/        # Modèles diabetes (auto-créé)
+└── 📁 datasets/                               # Datasets générés
+```
+
+### 🏆 Validation de l'Installation
+```bash
+# Test complet de validation
+echo "🧪 Test de validation NEUROPLAST-ANN v4.3..."
+
+# 1. Test compilation
+./compile_with_model_saver.sh
+
+# 2. Test dataset cancer
+./neuroplast-ann --config config/cancer_simple.yml --test-all &
+sleep 30 && pkill neuroplast-ann
+
+# 3. Vérifier organisation par dataset
+if [ -d "best_models_neuroplast_cancer" ]; then
+    echo "✅ Organisation par dataset fonctionne"
+else
+    echo "❌ Problème avec l'organisation par dataset"
+fi
+
+# 4. Test dataset chest X-ray
+./neuroplast-ann --config config/chest_xray_simple.yml --test-all &
+sleep 30 && pkill neuroplast-ann
+
+# 5. Vérification finale
+ls -la | grep best_models_neuroplast
+echo "🎉 Installation NEUROPLAST-ANN v4.3 validée !"
+```
+
+---
+
+## 📞 SUPPORT COMPILATION
+
+### 🐛 Signaler un Problème de Compilation
+1. **Inclure** : Version GCC, OS, messages d'erreur complets
+2. **Tester** : Compilation avec script fourni vs compilation manuelle
+3. **Vérifier** : Présence de tous les fichiers source
+
+### 📧 Contact
+- **Version** : NEUROPLAST-ANN v4.3
+- **Auteur** : Fabrice (2024-2025)
+- **Repository** : https://github.com/InomedisInc/ann-neuroplast-c
+
+---
+
+**NEUROPLAST-ANN v4.3** - Compilation avec Organisation Automatique par Dataset
+*Framework IA Modulaire en C natif* 🧠⚡🔧
