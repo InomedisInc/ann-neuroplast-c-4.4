@@ -46,6 +46,13 @@ typedef struct {
     char dataset_yaml[256];
     char dataset_name[64];         // Nom du dataset pour organisation des modèles (ex: "chest_xray", "cancer", "diabetes")
 
+    // Configuration pour l'analyse dynamique des champs (NOUVEAU)
+    char input_fields[1024];       // Liste des champs d'entrée séparés par des virgules
+    char output_fields[256];       // Liste des champs de sortie séparés par des virgules
+    int auto_normalize;            // 1 = normalisation automatique des champs numériques
+    int auto_categorize;           // 1 = binarisation automatique des champs catégoriques
+    char field_detection[32];      // "auto" = détection automatique des types
+
     // Configuration pour le traitement d'images
     char image_train_dir[256];     // Répertoire d'entraînement (obligatoire)
     char image_test_dir[256];      // Répertoire de test (obligatoire)

@@ -28,6 +28,7 @@ gcc -O3 -march=native -o neuroplast-ann \
     src/data/data_loader.c \
     src/data/image_loader.c \
     src/data/dataset.c \
+    src/data/dataset_analyzer.c \
     src/data/preprocessing.c \
     src/data/split.c \
     src/neural/activation.c \

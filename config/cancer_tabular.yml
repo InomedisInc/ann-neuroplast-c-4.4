@@ -1,0 +1,73 @@
+# Configuration pour dataset Cancer du sein - Analyse automatique des champs
+# NEUROPLAST-ANN v4.3 avec dataset_analyzer intégré
+
+# Type de dataset (OBLIGATOIRE pour l'analyseur)
+is_image_dataset: false  # Dataset tabulaire avec analyse automatique
+
+# Identification du dataset
+dataset_name: "cancer"
+dataset: "datasets/Cancer_neuroplast.csv"
+
+# Définition des champs (NOUVEAU SYSTÈME)
+# Liste des champs d'entrée (features) séparés par des virgules
+input_fields: "radius_mean,texture_mean,perimeter_mean,area_mean,smoothness_mean,compactness_mean,concavity_mean,concave_points_mean,symmetry_mean,fractal_dimension_mean,radius_se,texture_se,perimeter_se,area_se,smoothness_se,compactness_se,concavity_se,concave_points_se,symmetry_se,fractal_dimension_se,radius_worst,texture_worst,perimeter_worst,area_worst,smoothness_worst,compactness_worst,concavity_worst,concave_points_worst,symmetry_worst,fractal_dimension_worst"
+
+# Liste des champs de sortie (targets)
+output_fields: "diagnosis"
+
+# Le système détectera automatiquement :
+# - Type numérique vs catégorique pour chaque champ
+# - Appliquera la normalisation min-max pour les champs numériques
+# - Appliquera la binarisation 0/1 pour les champs catégoriques
+
+# Dimensions (optionnelles - détectées automatiquement)
+input_cols: 30   # Sera validé par l'analyseur
+output_cols: 1   # Classification binaire
+
+# Configuration d'entraînement
+batch_size: 32
+max_epochs: 150
+learning_rate: 0.003
+
+# Early stopping optimisé
+early_stopping: true
+patience: 15
+train_test_split: 0.8
+
+# Régularisation
+dropout_rate: 0.1
+l2_regularization: 0.0005
+
+# Configuration avancée pour l'analyseur
+auto_normalize: true      # Normalisation automatique des champs numériques
+auto_categorize: true     # Binarisation automatique des champs catégoriques
+field_detection: "auto"   # Détection automatique des types de champs
+
+# Optimisation pour dataset cancer
+optimized_parameters: false  # Configuration manuelle pour ce test
+
+# Méthodes neuroplast à tester
+neuroplast_methods:
+  - name: "adaptive"
+  - name: "advanced" 
+  - name: "bayesian"
+
+# Optimiseurs à tester
+optimizers:
+  - name: "adamw"
+  - name: "adam"
+  - name: "radam"
+
+# Activations à tester
+activations:
+  - name: "neuroplast"
+  - name: "gelu"
+  - name: "relu"
+
+# Métriques à calculer
+metrics:
+  - name: "accuracy"
+  - name: "precision"
+  - name: "recall"
+  - name: "f1_score"
+  - name: "auc_roc" 
