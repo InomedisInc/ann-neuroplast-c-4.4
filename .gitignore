@@ -1,0 +1,38 @@
+# Exécutables
+neuroplast-ann
+neuroplast-ann-debug
+test_*
+!test_*.c
+!test_*.yml
+
+# Fichiers objets et de compilation
+*.o
+*.a
+*.so
+*.dylib
+*.dSYM/
+
+# Modèles sauvegardés (générés automatiquement)
+src/model_saver/saved_models/
+src/model_saver/obj/
+best_models_neuroplast_*/
+
+# Fichiers temporaires
+*.tmp
+*.temp
+*~
+.DS_Store
+
+# IDE
+.idea/workspace.xml
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+debug.txt
+
+# Données sensibles (garder seulement les exemples)
+datasets/*.csv
+!datasets/example_*.csv 
