@@ -59,8 +59,55 @@ int main(int argc, char *argv[]) {
     
     printf("\n");
     
-    // Test 2: Configuration pour dataset d'images
-    printf("🖼️ TEST 2: Dataset Images\n");
+    // Test 2: Configuration pour dataset diabetes depuis fichier YAML
+    printf("🍃 TEST 2: Dataset Diabetes (tabulaire depuis YAML)\n");
+    printf("---------------------------------------------------\n");
+    
+    RichConfig diabetes_config;
+    memset(&diabetes_config, 0, sizeof(RichConfig));
+    
+    // Charger la configuration depuis le fichier YAML
+    if (parse_yaml_rich("config/diabetes_tabular.yml", &diabetes_config)) {
+        printf("✅ Configuration chargée depuis config/diabetes_tabular.yml\n");
+        printf("📋 Input fields lu: '%s'\n", diabetes_config.input_fields);
+        printf("🎯 Output fields lu: '%s'\n", diabetes_config.output_fields);
+        printf("🔍 Auto normalize: %s\n", diabetes_config.auto_normalize ? "Oui" : "Non");
+        printf("🔍 Auto categorize: %s\n", diabetes_config.auto_categorize ? "Oui" : "Non");
+        printf("🔍 Field detection: '%s'\n", diabetes_config.field_detection);
+    } else {
+        printf("❌ Erreur chargement configuration diabetes\n");
+        diabetes_config.is_image_dataset = 0;
+        strcpy(diabetes_config.dataset_name, "diabetes");
+        strcpy(diabetes_config.dataset, "datasets/diabetes_test.csv");
+        diabetes_config.input_cols = 8;
+        diabetes_config.output_cols = 1;
+    }
+    
+    Dataset *diabetes_dataset = create_analyzed_dataset(&diabetes_config);
+    if (diabetes_dataset) {
+        printf("✅ Dataset diabetes créé: %zu échantillons, %zu features\n", 
+               diabetes_dataset->num_samples, diabetes_dataset->input_cols);
+        
+        // Afficher quelques échantillons
+        printf("📋 Premiers échantillons:\n");
+        for (int i = 0; i < 2 && i < diabetes_dataset->num_samples; i++) {
+            printf("   Échantillon %d: [", i+1);
+            for (int j = 0; j < 5 && j < diabetes_dataset->input_cols; j++) {
+                printf("%.3f", diabetes_dataset->inputs[i][j]);
+                if (j < 4) printf(", ");
+            }
+            printf("...] → %.0f\n", diabetes_dataset->outputs[i][0]);
+        }
+        
+        dataset_free(diabetes_dataset);
+    } else {
+        printf("❌ Échec de création du dataset diabetes\n");
+    }
+    
+    printf("\n");
+    
+    // Test 3: Configuration pour dataset d'images
+    printf("🖼️ TEST 3: Dataset Images\n");
     printf("-------------------------\n");
     
     RichConfig image_config;
@@ -82,8 +129,8 @@ int main(int argc, char *argv[]) {
     
     printf("\n");
     
-    // Test 3: Configuration par défaut (médical simulé)
-    printf("🏥 TEST 3: Dataset Médical Simulé (par défaut)\n");
+    // Test 4: Configuration par défaut (médical simulé)
+    printf("🏥 TEST 4: Dataset Médical Simulé (par défaut)\n");
     printf("----------------------------------------------\n");
     
     RichConfig default_config;

@@ -1137,102 +1137,14 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
     
     Dataset *dataset = create_analyzed_dataset(&dataset_config);
     if (!dataset) {
-        printf("⚠️ Échec du système d'analyse automatique, création d'un dataset simulé de fallback\n");
-        
-        // Créer un dataset XOR-like de 4 features comme fallback
-        dataset = malloc(sizeof(Dataset));
-        if (!dataset) {
-            printf("❌ Erreur allocation mémoire dataset\n");
-            return 1;
-        }
-        
-        // Dataset MÉDICAL SIMULÉ ULTRA-COMPLEXE (fallback)
-        dataset->num_samples = 800; // Dataset encore plus large
-        dataset->input_cols = 8;    // Plus de features médicales
-        dataset->output_cols = 1;
-        
-        // Allouer mémoire
-        dataset->inputs = malloc(dataset->num_samples * sizeof(float*));
-        dataset->outputs = malloc(dataset->num_samples * sizeof(float*));
-        
-        for (size_t i = 0; i < dataset->num_samples; i++) {
-            dataset->inputs[i] = malloc(8 * sizeof(float));
-            dataset->outputs[i] = malloc(1 * sizeof(float));
-        }
-        
-        // Remplir avec données MÉDICALES COMPLEXES simulant de vrais patterns
-        srand(42); // Seed fixe pour reproductibilité
-        for (size_t i = 0; i < dataset->num_samples; i++) {
-            // Simulation de features médicales réalistes
-            float age = 0.2f + 0.6f * ((float)rand() / RAND_MAX);           // Age normalisé [0.2-0.8]
-            float cholesterol = 0.1f + 0.8f * ((float)rand() / RAND_MAX);   // Cholestérol [0.1-0.9]
-            float blood_pressure = 0.15f + 0.7f * ((float)rand() / RAND_MAX); // Tension [0.15-0.85]
-            float bmi = 0.3f + 0.5f * ((float)rand() / RAND_MAX);           // BMI [0.3-0.8]
-            float exercise = ((float)rand() / RAND_MAX);                     // Exercice [0-1]
-            float smoking = ((float)rand() / RAND_MAX > 0.7f) ? 1.0f : 0.0f; // Fumeur (30%)
-            float family_history = ((float)rand() / RAND_MAX > 0.8f) ? 1.0f : 0.0f; // Antécédents (20%)
-            float stress = 0.1f + 0.8f * ((float)rand() / RAND_MAX);        // Stress [0.1-0.9]
-            
-            dataset->inputs[i][0] = age;
-            dataset->inputs[i][1] = cholesterol;
-            dataset->inputs[i][2] = blood_pressure;
-            dataset->inputs[i][3] = bmi;
-            dataset->inputs[i][4] = exercise;
-            dataset->inputs[i][5] = smoking;
-            dataset->inputs[i][6] = family_history;
-            dataset->inputs[i][7] = stress;
-            
-            // MODÈLE MÉDICAL COMPLEXE RÉALISTE
-            // Calcul du risque cardiaque basé sur de vrais facteurs médicaux
-            float risk_score = 0.0f;
-            
-            // Facteurs de risque principaux (pondérés selon la littérature médicale)
-            risk_score += age * 0.25f;                    // Age: facteur majeur
-            risk_score += (cholesterol > 0.6f) ? 0.2f : 0.0f; // Cholestérol élevé
-            risk_score += (blood_pressure > 0.5f) ? 0.15f : 0.0f; // Hypertension
-            risk_score += (bmi > 0.6f) ? 0.1f : 0.0f;     // Obésité
-            risk_score += (1.0f - exercise) * 0.1f;       // Sédentarité
-            risk_score += smoking * 0.2f;                 // Tabagisme
-            risk_score += family_history * 0.15f;         // Antécédents familiaux
-            risk_score += stress * 0.1f;                  // Stress chronique
-            
-            // Interactions complexes entre facteurs (non-linéarités)
-            if (age > 0.6f && cholesterol > 0.7f) risk_score += 0.1f; // Age + cholestérol
-            if (smoking == 1.0f && blood_pressure > 0.6f) risk_score += 0.08f; // Tabac + hypertension
-            if (family_history == 1.0f && age > 0.5f) risk_score += 0.06f; // Génétique + age
-            if (bmi > 0.7f && exercise < 0.3f) risk_score += 0.05f; // Obésité + sédentarité
-            
-            // Facteurs protecteurs
-            if (exercise > 0.7f && bmi < 0.5f) risk_score -= 0.05f; // Sport + poids normal
-            if (stress < 0.3f && exercise > 0.6f) risk_score -= 0.03f; // Faible stress + sport
-            
-            // Ajout de bruit réaliste (variabilité individuelle)
-            float noise = ((float)rand() / RAND_MAX - 0.5f) * 0.1f; // ±5% de bruit
-            risk_score += noise;
-            
-            // Conversion en probabilité avec fonction sigmoïde
-            float probability = 1.0f / (1.0f + expf(-(risk_score - 0.5f) * 8.0f));
-            
-            // Ajout de cas difficiles (10% de labels contre-intuitifs)
-            if ((float)rand() / RAND_MAX < 0.1f) {
-                probability = 1.0f - probability; // Inverser pour créer des cas difficiles
-            }
-            
-            // Seuillage final avec un peu de bruit
-            dataset->outputs[i][0] = (probability > 0.5f) ? 1.0f : 0.0f;
-            
-            // Ajout de bruit sur le label final (2% d'erreurs de diagnostic)
-            if ((float)rand() / RAND_MAX < 0.02f) {
-                dataset->outputs[i][0] = 1.0f - dataset->outputs[i][0];
-            }
-        }
-        
-        printf("✅ Dataset simulé de fallback créé: %zu échantillons, 8 features\n", dataset->num_samples);
+        printf("❌ Échec du système d'analyse automatique\n");
+        printf("❌ Impossible de créer un dataset, arrêt du test\n");
+        return 1;
     }
     
     printf("✅ Dataset chargé: %zu samples, %zu inputs, %zu outputs\n", 
            dataset->num_samples, dataset->input_cols, dataset->output_cols);
-
+    
     // Division train/test
     Dataset *train_set = NULL, *test_set = NULL;
     split_dataset(dataset, 0.8f, &train_set, &test_set);
