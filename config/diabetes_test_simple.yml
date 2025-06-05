@@ -1,0 +1,49 @@
+# Configuration simplifiée pour test rapide des activations - Diabète
+is_image_dataset: false
+dataset_name: "diabetes"
+dataset: "datasets/diabetes.csv"
+
+input_fields: "Pregnancies,Glucose,BloodPressure,SkinThickness,Insulin,BMI,DiabetesPedigreeFunction,Age"
+output_fields: "Outcome"
+
+input_cols: 8
+output_cols: 1
+
+batch_size: 32
+max_epochs: 50  # Réduit pour test rapide
+learning_rate: 0.003
+debug_mode: false
+
+early_stopping: true
+patience: 8  # Réduit pour test rapide
+train_test_split: 0.75
+
+dropout_rate: 0.1
+l2_regularization: 0.0005
+
+auto_normalize: true
+auto_categorize: true
+field_detection: "auto"
+
+optimized_parameters: false
+
+# Test avec seulement 2 méthodes neuroplast
+neuroplast_methods:
+  - name: "standard"
+  - name: "adaptive"
+
+# Test avec seulement 2 optimiseurs
+optimizers:
+  - name: "adam"
+  - name: "sgd"
+
+# Test avec seulement 3 activations pour voir les différences clairement
+activations:
+  - name: "relu"
+  - name: "sigmoid"  
+  - name: "gelu"
+
+# Métriques
+metrics:
+  - name: "accuracy"
+  - name: "f1_score" 

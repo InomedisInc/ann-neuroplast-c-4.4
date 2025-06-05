@@ -1244,7 +1244,7 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
                 AllMetrics total_metrics = {0};  // Somme de toutes les métriques
                 AllMetrics best_metrics = {0};   // Meilleures métriques obtenues
                 int convergence_count = 0;
-                int trials = 5; // 3 → 5 essais par combinaison pour plus de stabilité
+                int trials = 1; // 🔧 CORRECTION: 1 seul essai pour révéler les vraies différences entre activations
                 
                 // Réinitialiser la barre des essais pour cette combinaison
                 progress_global_update(trials_bar, 0, 0.0f, 0.0f, 0.0f);
@@ -1831,14 +1831,29 @@ int test_all(const RichConfig *cfg) {
     printf("📊 MODE CONFIGURATION STATIQUE\n");
     printf("===============================\n\n");
     
-    // Définir toutes les combinaisons comme dans la commande complète
-    const char *neuroplast_methods[] = {"standard", "adaptive", "advanced", "bayesian", "progressive", "swarm", "propagation"};
-    const char *optimizers[] = {"adamw", "adam", "sgd", "rmsprop", "lion", "adabelief", "radam", "adamax", "nadam"};
-    const char *activations[] = {"neuroplast", "relu", "leaky_relu", "gelu", "sigmoid", "elu", "mish", "swish", "prelu"};
+    // 🔧 CORRECTION: Utiliser les méthodes/activations/optimiseurs du fichier YAML
+    // au lieu des listes hardcodées pour respecter la configuration
     
-    int num_methods = 7;
-    int num_optimizers = 9;
-    int num_activations = 9;
+    // Extraire les méthodes neuroplast de la configuration
+    const char **neuroplast_methods = malloc(cfg->num_neuroplast_methods * sizeof(char*));
+    for (int i = 0; i < cfg->num_neuroplast_methods; i++) {
+        neuroplast_methods[i] = cfg->neuroplast_methods[i].name;
+    }
+    int num_methods = cfg->num_neuroplast_methods;
+    
+    // Extraire les optimiseurs de la configuration
+    const char **optimizers = malloc(cfg->num_optimizers * sizeof(char*));
+    for (int i = 0; i < cfg->num_optimizers; i++) {
+        optimizers[i] = cfg->optimizers[i].name;
+    }
+    int num_optimizers = cfg->num_optimizers;
+    
+    // Extraire les activations de la configuration
+    const char **activations = malloc(cfg->num_activations * sizeof(char*));
+    for (int i = 0; i < cfg->num_activations; i++) {
+        activations[i] = cfg->activations[i].name;
+    }
+    int num_activations = cfg->num_activations;
     int total_combinations = num_methods * num_optimizers * num_activations;
     
     printf("🎯 CONFIGURATION UTILISÉE :\n");
@@ -1872,10 +1887,17 @@ int test_all(const RichConfig *cfg) {
         printf("📁 Utilisation de la configuration par défaut: %s\n", config_file);
     }
     
-    return test_all_with_real_dataset(neuroplast_methods, num_methods,
-                                     optimizers, num_optimizers,
-                                     activations, num_activations,
-                                     config_file, 150); // AUGMENTER LES ÉPOQUES DE 100 À 150
+    int result = test_all_with_real_dataset(neuroplast_methods, num_methods,
+                                           optimizers, num_optimizers,
+                                           activations, num_activations,
+                                           config_file, 150); // AUGMENTER LES ÉPOQUES DE 100 À 150
+    
+    // Nettoyage mémoire
+    free(neuroplast_methods);
+    free(optimizers);
+    free(activations);
+    
+    return result;
 }
 
 // Fonction main pour gérer les modes de test
