@@ -181,8 +181,9 @@ float *load_image_data(const char *filepath, int width, int height, int channels
     // Conversion simple - si les dimensions correspondent exactement
     if (img_width == width && img_height == height && img_channels == channels) {
         for (size_t i = 0; i < target_size; i++) {
-            // Normalisation simple [0,1] - plus stable pour l'entraînement
-            float_data[i] = img_data[i] / 255.0f;
+            // Normalisation améliorée : [0,1] puis centrage autour de 0.5
+            float normalized = img_data[i] / 255.0f;
+            float_data[i] = (normalized - 0.5f) * 2.0f; // Normalisation [-1,1]
         }
     } else {
         // Redimensionnement simple (nearest neighbor)
@@ -196,8 +197,9 @@ float *load_image_data(const char *filepath, int width, int height, int channels
                     int dst_idx = (y * width + x) * channels + c;
                     
                     if (c < img_channels) {
-                        // Normalisation simple [0,1] - plus stable pour l'entraînement
-                        float_data[dst_idx] = img_data[src_idx] / 255.0f;
+                        // Normalisation améliorée : [0,1] puis centrage autour de 0.5
+                        float normalized = img_data[src_idx] / 255.0f;
+                        float_data[dst_idx] = (normalized - 0.5f) * 2.0f; // Normalisation [-1,1]
                     } else {
                         float_data[dst_idx] = 0.0f; // Padding si moins de canaux
                     }

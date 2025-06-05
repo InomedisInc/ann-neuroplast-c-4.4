@@ -21,7 +21,6 @@
 #include "training/progressive.h"
 #include "training/swarm.h"
 #include "training/propagation.h"
-#include "reporting/experiment_results.h"
 #include "args_parser.h"
 #include "neural/layer.h"
 #include "training/trainer.h"
@@ -1385,11 +1384,10 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
                     }
                     
                     char dataset_info[128];
+                    // Utiliser le nom du dataset depuis la configuration ou un nom générique
                     const char *dataset_display_name = "Dataset";
                     if (strlen(dataset_config.dataset_name) > 0) {
                         dataset_display_name = dataset_config.dataset_name;
-                    } else if (strlen(dataset_config.dataset) > 0) {
-                        dataset_display_name = dataset_config.dataset;
                     }
                     snprintf(dataset_info, sizeof(dataset_info), "%s (%zu échantillons)", dataset_display_name, dataset->num_samples);
                     

@@ -28,24 +28,17 @@ typedef struct {
 
 int export_results_to_csv_complete(CombinationResultComplete *results, int result_count, 
                                    const char *config_path, size_t input_cols, size_t output_cols,
-                                   int total_combinations, int max_epochs, size_t num_samples) {
+                                   int total_combinations, int max_epochs, size_t num_samples, 
+                                   const char *dataset_name) {
     printf("\n📊 EXPORT DES RÉSULTATS EN CSV (TOUTES MÉTRIQUES)...\n");
-    
-    // Extraire le nom du dataset du chemin de config
-    const char *dataset_name = "dataset";
-    if (config_path) {
-        const char *last_slash = strrchr(config_path, '/');
-        const char *filename = last_slash ? last_slash + 1 : config_path;
-        dataset_name = filename;
-    }
     
     char csv_filename[256];
     time_t now = time(NULL);
     struct tm *tm_info = localtime(&now);
-    snprintf(csv_filename, sizeof(csv_filename), "results_exhaustif_%.*s_%04d%02d%02d_%02d%02d%02d.csv",
-            (int)(strrchr(dataset_name, '.') - dataset_name), dataset_name,
-            tm_info->tm_year + 1900, tm_info->tm_mon + 1, tm_info->tm_mday,
-            tm_info->tm_hour, tm_info->tm_min, tm_info->tm_sec);
+    const char *dataset_for_filename = dataset_name ? dataset_name : "dataset";
+    char filename_pattern[256];
+    snprintf(filename_pattern, sizeof(filename_pattern), "results_exhaustif_%s_%%Y%%m%%d_%%H%%M%%S.csv", dataset_for_filename);
+    strftime(csv_filename, sizeof(csv_filename), filename_pattern, tm_info);
     
     FILE *csv_file = fopen(csv_filename, "w");
     if (!csv_file) {
@@ -54,7 +47,8 @@ int export_results_to_csv_complete(CombinationResultComplete *results, int resul
     }
     
     // En-tête CSV avec métadonnées du dataset
-    fprintf(csv_file, "# NEUROPLAST-ANN - Test Exhaustif Dataset %s\n", dataset_name);
+    const char *dataset_display_name = dataset_name ? dataset_name : "Dataset";
+    fprintf(csv_file, "# NEUROPLAST-ANN - Test Exhaustif Dataset %s\n", dataset_display_name);
     fprintf(csv_file, "# Dataset: %s (%zu échantillons)\n", config_path, num_samples);
     fprintf(csv_file, "# Architecture: Input(%zu)→256→128→Output(%zu)\n", input_cols, output_cols);
     fprintf(csv_file, "# Total combinaisons: %d\n", total_combinations);

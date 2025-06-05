@@ -37,10 +37,12 @@ typedef struct {
  * @param total_combinations Nombre total de combinaisons
  * @param max_epochs Nombre maximum d'époques
  * @param num_samples Nombre d'échantillons dans le dataset
+ * @param dataset_name Nom du dataset pour l'affichage
  * @return 1 si succès, 0 si erreur
  */
 int export_results_to_csv_complete(CombinationResultComplete *results, int result_count, 
                                    const char *config_path, size_t input_cols, size_t output_cols,
-                                   int total_combinations, int max_epochs, size_t num_samples);
+                                   int total_combinations, int max_epochs, size_t num_samples, 
+                                   const char *dataset_name);
 
 #endif // CSV_EXPORT_COMPLETE_H 

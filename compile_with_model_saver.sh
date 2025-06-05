@@ -22,6 +22,7 @@ gcc -O3 -march=native -o neuroplast-ann \
     src/matrix.c \
     src/memory.c \
     src/yaml_parser_rich.c \
+    src/csv_export_complete.c \
     src/yaml/lexer.c \
     src/yaml/nodes.c \
     src/yaml/parser.c \
@@ -65,7 +66,6 @@ gcc -O3 -march=native -o neuroplast-ann \
     src/model_saver/model_saver_pth.c \
     src/model_saver/model_saver_h5.c \
     src/model_saver/model_saver_utils.c \
-    src/model_saver/integration_main.c \
     -lm -I./src
 
 if [ $? -eq 0 ]; then
