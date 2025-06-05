@@ -1,0 +1,12 @@
+# NEUROPLAST-ANN - Test Exhaustif XOR Médical Simulé
+# Dataset: Médical simulé (5856 échantillons, 4096 features)
+# Architecture: Input(4096)→256→128→Output(1)
+# Total combinaisons: 1
+# Essais par combinaison: 5
+# Époques max: 50
+# Features médicales: Age, Cholestérol, Tension, BMI, Exercice, Tabac, Antécédents, Stress
+# Modèle de risque: Interactions complexes + bruit réaliste
+# Toutes les métriques: Accuracy, Precision, Recall, F1-Score, AUC-ROC
+#
+Rang,Methode,Optimiseur,Activation,Combinaison_Complete,Avg_Accuracy_Pct,Avg_Precision_Pct,Avg_Recall_Pct,Avg_F1_Score_Pct,Avg_AUC_ROC_Pct,Best_Accuracy_Pct,Best_Precision_Pct,Best_Recall_Pct,Best_F1_Score_Pct,Best_AUC_ROC_Pct,Convergence_Count,Total_Trials,Taux_Convergence_Pct
+1,standard,adam,relu,standard+adam+relu,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00

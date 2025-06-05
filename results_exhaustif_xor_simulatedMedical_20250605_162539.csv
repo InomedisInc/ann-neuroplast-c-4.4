@@ -1,0 +1,23 @@
+# NEUROPLAST-ANN - Test Exhaustif XOR Médical Simulé
+# Dataset: Médical simulé (769 échantillons, 8 features)
+# Architecture: Input(8)→256→128→Output(1)
+# Total combinaisons: 12
+# Essais par combinaison: 5
+# Époques max: 50
+# Features médicales: Age, Cholestérol, Tension, BMI, Exercice, Tabac, Antécédents, Stress
+# Modèle de risque: Interactions complexes + bruit réaliste
+# Toutes les métriques: Accuracy, Precision, Recall, F1-Score, AUC-ROC
+#
+Rang,Methode,Optimiseur,Activation,Combinaison_Complete,Avg_Accuracy_Pct,Avg_Precision_Pct,Avg_Recall_Pct,Avg_F1_Score_Pct,Avg_AUC_ROC_Pct,Best_Accuracy_Pct,Best_Precision_Pct,Best_Recall_Pct,Best_F1_Score_Pct,Best_AUC_ROC_Pct,Convergence_Count,Total_Trials,Taux_Convergence_Pct
+1,name: "standard",name: "adam",name: "relu",name: "standard"+name: "adam"+name: "relu",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+2,name: "standard",name: "adam",name: "sigmoid",name: "standard"+name: "adam"+name: "sigmoid",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+3,name: "standard",name: "adam",name: "gelu",name: "standard"+name: "adam"+name: "gelu",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+4,name: "standard",name: "sgd",name: "relu",name: "standard"+name: "sgd"+name: "relu",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+5,name: "standard",name: "sgd",name: "sigmoid",name: "standard"+name: "sgd"+name: "sigmoid",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+6,name: "standard",name: "sgd",name: "gelu",name: "standard"+name: "sgd"+name: "gelu",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+7,name: "adaptive",name: "adam",name: "relu",name: "adaptive"+name: "adam"+name: "relu",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+8,name: "adaptive",name: "adam",name: "sigmoid",name: "adaptive"+name: "adam"+name: "sigmoid",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+9,name: "adaptive",name: "adam",name: "gelu",name: "adaptive"+name: "adam"+name: "gelu",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+10,name: "adaptive",name: "sgd",name: "relu",name: "adaptive"+name: "sgd"+name: "relu",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+11,name: "adaptive",name: "sgd",name: "sigmoid",name: "adaptive"+name: "sgd"+name: "sigmoid",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00
+12,name: "adaptive",name: "sgd",name: "gelu",name: "adaptive"+name: "sgd"+name: "gelu",0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0,1,0.00

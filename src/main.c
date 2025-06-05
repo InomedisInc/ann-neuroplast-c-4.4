@@ -1244,7 +1244,7 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
                 AllMetrics total_metrics = {0};  // Somme de toutes les métriques
                 AllMetrics best_metrics = {0};   // Meilleures métriques obtenues
                 int convergence_count = 0;
-                int trials = 1; // 🔧 CORRECTION: 1 seul essai pour révéler les vraies différences entre activations
+                int trials = 5; // 3 → 5 essais par combinaison pour plus de stabilité
                 
                 // Réinitialiser la barre des essais pour cette combinaison
                 progress_global_update(trials_bar, 0, 0.0f, 0.0f, 0.0f);
@@ -1255,17 +1255,86 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
                     const char *test_activations[4];
                     int num_layers;
                     
-                    // 🔧 ARCHITECTURE ÉQUITABLE : IDENTIQUE POUR TOUTES LES ACTIVATIONS
-                    // Suppression des architectures variables qui masquent les différences
+                    // Choix d'architecture selon l'optimiseur et l'activation
+                    int arch_variant = (o * num_activations + a) % 6; // 6 architectures différentes
                     
-                    layer_sizes[0] = 8;    // Input size (heart attack dataset)
-                    layer_sizes[1] = 128;  // Couche cachée raisonnable
-                    layer_sizes[2] = 64;   // Couche de réduction
-                    layer_sizes[3] = 1;    // Output binaire
-                    test_activations[0] = activations[a];  // Activation testée
-                    test_activations[1] = activations[a];  // Activation testée
-                    test_activations[2] = "sigmoid";       // Sigmoid pour la sortie
-                    num_layers = 4;
+                    switch(arch_variant) {
+                        case 0: // Architecture optimisée minimaliste
+                            layer_sizes[0] = 8;   // 8 features médicales
+                            layer_sizes[1] = 128; // 64 → 128 (doublé)
+                            layer_sizes[2] = 64;  // Ajout d'une couche
+                            layer_sizes[3] = 1;   // Classification binaire
+                            test_activations[0] = activations[a];
+                            test_activations[1] = activations[a];
+                            test_activations[2] = "sigmoid";
+                            num_layers = 4; // 3 → 4 couches
+                            break;
+                            
+                        case 1: // Architecture équilibrée optimisée
+                            layer_sizes[0] = 8;
+                            layer_sizes[1] = 256; // 128 → 256
+                            layer_sizes[2] = 128; // 64 → 128
+                            layer_sizes[3] = 64;  // Ajout d'une couche
+                            layer_sizes[4] = 1;
+                            test_activations[0] = activations[a];
+                            test_activations[1] = activations[a];
+                            test_activations[2] = activations[a];
+                            test_activations[3] = "sigmoid";
+                            num_layers = 5; // 4 → 5 couches
+                            break;
+                            
+                        case 2: // Architecture large optimisée
+                            layer_sizes[0] = 8;
+                            layer_sizes[1] = 512; // 256 → 512
+                            layer_sizes[2] = 256; // 128 → 256
+                            layer_sizes[3] = 128; // Ajout d'une couche
+                            layer_sizes[4] = 1;
+                            test_activations[0] = activations[a];
+                            test_activations[1] = activations[a];
+                            test_activations[2] = activations[a];
+                            test_activations[3] = "sigmoid";
+                            num_layers = 5; // 4 → 5 couches
+                            break;
+                            
+                        case 3: // Architecture profonde ultra-optimisée
+                            layer_sizes[0] = 8;
+                            layer_sizes[1] = 256; // 128 → 256
+                            layer_sizes[2] = 128; // 64 → 128
+                            layer_sizes[3] = 64;  // 32 → 64
+                            layer_sizes[4] = 1;
+                            test_activations[0] = activations[a];
+                            test_activations[1] = activations[a];
+                            test_activations[2] = activations[a];
+                            test_activations[3] = "sigmoid";
+                            num_layers = 5;
+                            break;
+                            
+                        case 4: // Architecture étroite mais plus profonde
+                            layer_sizes[0] = 8;
+                            layer_sizes[1] = 64;  // 32 → 64
+                            layer_sizes[2] = 32;  // 16 → 32
+                            layer_sizes[3] = 16;  // Ajout d'une couche
+                            layer_sizes[4] = 1;
+                            test_activations[0] = activations[a];
+                            test_activations[1] = activations[a];
+                            test_activations[2] = activations[a];
+                            test_activations[3] = "sigmoid";
+                            num_layers = 5; // 4 → 5 couches
+                            break;
+                            
+                        default: // Architecture très large ultra-optimisée (cas 5)
+                            layer_sizes[0] = 8;
+                            layer_sizes[1] = 1024; // 512 → 1024
+                            layer_sizes[2] = 512;  // 256 → 512
+                            layer_sizes[3] = 256;  // Ajout d'une couche
+                            layer_sizes[4] = 1;
+                            test_activations[0] = activations[a];
+                            test_activations[1] = activations[a];
+                            test_activations[2] = activations[a];
+                            test_activations[3] = "sigmoid";
+                            num_layers = 5; // 4 → 5 couches
+                            break;
+                    }
                     
                     // Création du réseau avec architecture variable
                     NeuralNetwork *network = network_create_simple(num_layers, layer_sizes, test_activations);
@@ -1277,25 +1346,34 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
                     // Learning rate adaptatif selon l'optimiseur ET l'architecture (OPTIMISÉ POUR >95% ACCURACY!)
                     float lr = 0.003f; // 🔧 CORRECTION: Base réduite de 0.01 à 0.003 (comme version qui fonctionnait)
                     
-                    // 🔧 CORRECTION: Learning rate BASE FIXE pour toutes les activations
-                    // (suppression des ajustements automatiques qui masquent les différences)
+                    // Ajustement selon l'optimiseur (OPTIMISÉ)
+                    if (strcmp(optimizers[o], "sgd") == 0) lr = 0.015f;        // 0.05 → 0.015
+                    else if (strcmp(optimizers[o], "lion") == 0) lr = 0.0003f; // 0.001 → 0.0003
+                    else if (strcmp(optimizers[o], "adamw") == 0) lr = 0.005f; // 0.015 → 0.005
+                    else if (strcmp(optimizers[o], "adam") == 0) lr = 0.004f;  // 0.012 → 0.004
+                    else if (strcmp(optimizers[o], "rmsprop") == 0) lr = 0.002f; // 0.008 → 0.002
+                    else if (strcmp(optimizers[o], "adabelief") == 0) lr = 0.003f; // 0.01 → 0.003
+                    else if (strcmp(optimizers[o], "radam") == 0) lr = 0.0035f;   // 0.01 → 0.0035
+                    else if (strcmp(optimizers[o], "adamax") == 0) lr = 0.006f;   // 0.018 → 0.006
+                    else if (strcmp(optimizers[o], "nadam") == 0) lr = 0.0045f;   // 0.013 → 0.0045
                     
-                    // Ajustement minimal selon l'optimiseur seulement (pour compatibilité)
-                    if (strcmp(optimizers[o], "sgd") == 0) lr = 0.01f;
-                    else if (strcmp(optimizers[o], "lion") == 0) lr = 0.0005f;
-                    else if (strcmp(optimizers[o], "adamw") == 0) lr = 0.004f;
-                    else if (strcmp(optimizers[o], "adam") == 0) lr = 0.003f;
-                    else if (strcmp(optimizers[o], "rmsprop") == 0) lr = 0.002f;
-                    else if (strcmp(optimizers[o], "adabelief") == 0) lr = 0.002f;
-                    else if (strcmp(optimizers[o], "radam") == 0) lr = 0.003f;
-                    else if (strcmp(optimizers[o], "adamax") == 0) lr = 0.005f;
-                    else if (strcmp(optimizers[o], "nadam") == 0) lr = 0.004f;
+                    // Ajustement selon l'architecture pour plus de variation (OPTIMISÉ)
+                    switch(arch_variant) {
+                        case 0: lr *= 1.2f; break;  // Architecture minimaliste - moins agressif (1.5 → 1.2)
+                        case 1: lr *= 1.0f; break;  // Architecture équilibrée - standard
+                        case 2: lr *= 0.9f; break;  // Architecture large - un peu plus conservateur (0.8 → 0.9)
+                        case 3: lr *= 0.7f; break;  // Architecture profonde - conservateur (0.6 → 0.7)
+                        case 4: lr *= 1.3f; break;  // Architecture étroite - modérément agressif (2.0 → 1.3)
+                        case 5: lr *= 0.5f; break;  // Architecture très large - très conservateur (0.4 → 0.5)
+                    }
                     
-                    // 🚫 SUPPRESSION des ajustements selon l'architecture et l'activation
-                    // pour permettre aux différences naturelles de s'exprimer
-                    
-                    // PAS d'ajustement selon l'architecture - laissons les différences apparaître
-                    // PAS d'ajustement selon l'activation - c'est justement ce qu'on veut tester!
+                    // Ajustement selon la fonction d'activation (OPTIMISÉ)
+                    if (strcmp(activations[a], "relu") == 0) lr *= 1.0f;        // 1.1 → 1.0
+                    else if (strcmp(activations[a], "gelu") == 0) lr *= 0.95f;   // 0.9 → 0.95
+                    else if (strcmp(activations[a], "sigmoid") == 0) lr *= 1.1f; // 1.3 → 1.1
+                    else if (strcmp(activations[a], "neuroplast") == 0) lr *= 0.9f; // 0.8 → 0.9
+                    else if (strcmp(activations[a], "mish") == 0) lr *= 0.9f;    // 0.85 → 0.9
+                    else if (strcmp(activations[a], "swish") == 0) lr *= 1.0f;   // 0.95 → 1.0
                     
                     // AFFICHAGE ORGANISÉ DES INFORMATIONS DU RÉSEAU
                     char architecture[128];
@@ -1831,29 +1909,14 @@ int test_all(const RichConfig *cfg) {
     printf("📊 MODE CONFIGURATION STATIQUE\n");
     printf("===============================\n\n");
     
-    // 🔧 CORRECTION: Utiliser les méthodes/activations/optimiseurs du fichier YAML
-    // au lieu des listes hardcodées pour respecter la configuration
+    // Définir toutes les combinaisons comme dans la commande complète
+    const char *neuroplast_methods[] = {"standard", "adaptive", "advanced", "bayesian", "progressive", "swarm", "propagation"};
+    const char *optimizers[] = {"adamw", "adam", "sgd", "rmsprop", "lion", "adabelief", "radam", "adamax", "nadam"};
+    const char *activations[] = {"neuroplast", "relu", "leaky_relu", "gelu", "sigmoid", "elu", "mish", "swish", "prelu"};
     
-    // Extraire les méthodes neuroplast de la configuration
-    const char **neuroplast_methods = malloc(cfg->num_neuroplast_methods * sizeof(char*));
-    for (int i = 0; i < cfg->num_neuroplast_methods; i++) {
-        neuroplast_methods[i] = cfg->neuroplast_methods[i].name;
-    }
-    int num_methods = cfg->num_neuroplast_methods;
-    
-    // Extraire les optimiseurs de la configuration
-    const char **optimizers = malloc(cfg->num_optimizers * sizeof(char*));
-    for (int i = 0; i < cfg->num_optimizers; i++) {
-        optimizers[i] = cfg->optimizers[i].name;
-    }
-    int num_optimizers = cfg->num_optimizers;
-    
-    // Extraire les activations de la configuration
-    const char **activations = malloc(cfg->num_activations * sizeof(char*));
-    for (int i = 0; i < cfg->num_activations; i++) {
-        activations[i] = cfg->activations[i].name;
-    }
-    int num_activations = cfg->num_activations;
+    int num_methods = 7;
+    int num_optimizers = 9;
+    int num_activations = 9;
     int total_combinations = num_methods * num_optimizers * num_activations;
     
     printf("🎯 CONFIGURATION UTILISÉE :\n");
@@ -1887,17 +1950,10 @@ int test_all(const RichConfig *cfg) {
         printf("📁 Utilisation de la configuration par défaut: %s\n", config_file);
     }
     
-    int result = test_all_with_real_dataset(neuroplast_methods, num_methods,
-                                           optimizers, num_optimizers,
-                                           activations, num_activations,
-                                           config_file, 150); // AUGMENTER LES ÉPOQUES DE 100 À 150
-    
-    // Nettoyage mémoire
-    free(neuroplast_methods);
-    free(optimizers);
-    free(activations);
-    
-    return result;
+    return test_all_with_real_dataset(neuroplast_methods, num_methods,
+                                     optimizers, num_optimizers,
+                                     activations, num_activations,
+                                     config_file, 150); // AUGMENTER LES ÉPOQUES DE 100 À 150
 }
 
 // Fonction main pour gérer les modes de test
