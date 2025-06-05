@@ -249,7 +249,7 @@ NeuralNetwork *network_create_simple(size_t n_layers, const size_t *layer_sizes,
     net->num_layers = n_layers - 1;
     
     // Configuration des hyperparamètres pour convergence optimale
-    net->learning_rate = 0.001f;  // LR de base standard
+    net->learning_rate = 0.005f;   // 🔧 CORRECTION: Réduire de 0.01 à 0.005 pour éviter saturation
     net->momentum = 0.9f;         // Momentum standard
     net->use_momentum = 1;        // Activer momentum par défaut
     
@@ -257,7 +257,7 @@ NeuralNetwork *network_create_simple(size_t n_layers, const size_t *layer_sizes,
     net->class_weights[0] = 1.0f;   // Classe 0 (sain)
     net->class_weights[1] = 1.0f;   // Classe 1 (malade) - pas de déséquilibre par défaut
     net->dropout_rate = 0.0f;       // ✅ Pas de dropout par défaut (peut être activé séparément)
-    net->l2_lambda = 0.0001f;       // ✅ Régularisation L2 très légère (était 0.0005 - trop fort)
+    net->l2_lambda = 0.00001f;      // 🔧 CORRECTION: Réduire de 0.0001 à 0.00001 (10x moins)
     net->optimal_threshold = 0.5f;  // Seuil standard
     net->use_dropout = 0;           // Dropout désactivé par défaut
     net->dropout_mask = NULL;
@@ -322,10 +322,26 @@ NeuralNetwork *network_create_simple(size_t n_layers, const size_t *layer_sizes,
         // Initialisation des poids selon l'activation
         init_weights_simple(net->layers[i], activation);
         
-        // OPTIMISATION SPÉCIALE pour la couche de sortie
+        // 🔧 CORRECTION MAJEURE: Initialisation équilibrée pour la couche de sortie
         if (i == net->num_layers - 1) {
+            // 🔧 CORRECTION: Revenir au biais négatif qui fonctionnait dans la version précédente
             // Biais négatif pour favoriser la détection des maladies cardiaques (rappel élevé)
             net->layers[i]->biases[0] = -1.0f; // Logit pour probabilité ~27% (favorise détection)
+            
+            // 🔧 CORRECTION SUPPLÉMENTAIRE: Réinitialiser les poids de sortie avec Xavier/Glorot
+            size_t input_size = net->layers[i]->input_size;
+            size_t output_size = net->layers[i]->output_size;
+            float xavier_std = sqrtf(1.0f / input_size); // 🔧 CORRECTION: Réduire std pour éviter saturation
+            
+            // 🔧 CORRECTION: Accès correct aux poids weights[output_idx][input_idx]
+            for (size_t out_idx = 0; out_idx < output_size; out_idx++) {
+                for (size_t in_idx = 0; in_idx < input_size; in_idx++) {
+                    // 🔧 CORRECTION: Initialisation plus conservative pour éviter saturation
+                    net->layers[i]->weights[out_idx][in_idx] = ((float)rand() / RAND_MAX - 0.5f) * xavier_std;
+                }
+            }
+            
+            printf("🔧 Couche de sortie: biais=-1.0, poids Xavier conservateur (std=%.4f)\\n", xavier_std);
         }
         
         // Allocation momentum pour cette couche
@@ -439,6 +455,28 @@ NeuralNetwork *network_create_simple_configured(size_t n_layers, const size_t *l
         
         // Initialisation des poids selon l'activation
         init_weights_simple(net->layers[i], activation);
+        
+        // 🔧 CORRECTION MAJEURE: Initialisation équilibrée pour la couche de sortie
+        if (i == net->num_layers - 1) {
+            // 🔧 CORRECTION: Revenir au biais négatif qui fonctionnait dans la version précédente
+            // Biais négatif pour favoriser la détection des maladies cardiaques (rappel élevé)
+            net->layers[i]->biases[0] = -1.0f; // Logit pour probabilité ~27% (favorise détection)
+            
+            // 🔧 CORRECTION SUPPLÉMENTAIRE: Réinitialiser les poids de sortie avec Xavier/Glorot
+            size_t input_size = net->layers[i]->input_size;
+            size_t output_size = net->layers[i]->output_size;
+            float xavier_std = sqrtf(1.0f / input_size); // 🔧 CORRECTION: Réduire std pour éviter saturation
+            
+            // 🔧 CORRECTION: Accès correct aux poids weights[output_idx][input_idx]
+            for (size_t out_idx = 0; out_idx < output_size; out_idx++) {
+                for (size_t in_idx = 0; in_idx < input_size; in_idx++) {
+                    // 🔧 CORRECTION: Initialisation plus conservative pour éviter saturation
+                    net->layers[i]->weights[out_idx][in_idx] = ((float)rand() / RAND_MAX - 0.5f) * xavier_std;
+                }
+            }
+            
+            printf("🔧 Couche de sortie: biais=-1.0, poids Xavier conservateur (std=%.4f)\\n", xavier_std);
+        }
         
         // Allocation momentum pour cette couche
         net->momentum_weights[i] = calloc(output_size * input_size, sizeof(float));
@@ -648,7 +686,7 @@ void network_set_dropout_simple(NeuralNetwork *net, int use_dropout) {
     simple_net->use_dropout = use_dropout;
 }
 
-// Fonction pour optimiser le seuil de décision basé sur F1-score
+// Fonction pour optimiser le seuil de décision basé sur F1-score (CORRIGÉE)
 float optimize_threshold_simple(NeuralNetwork *net, float inputs[][21], float targets[], int num_samples) {
     SimpleNeuralNetwork *simple_net = (SimpleNeuralNetwork*)net;
     
@@ -657,9 +695,10 @@ float optimize_threshold_simple(NeuralNetwork *net, float inputs[][21], float ta
     simple_net->use_dropout = 0;
     
     float best_threshold = 0.5f;
-    float best_f1 = 0.0f;
+    float best_score = 0.0f;
     
-    printf("🔍 Debug: Analyse des prédictions avant optimisation...\n");
+    // Debug désactivé par défaut, peut être activé en changeant if(0) en if(1)
+    if(0) printf("🔍 Debug: Analyse des prédictions avant optimisation...\n");
     
     // Analyser les prédictions actuelles
     float min_score = 1.0f, max_score = 0.0f;
@@ -680,9 +719,8 @@ float optimize_threshold_simple(NeuralNetwork *net, float inputs[][21], float ta
     printf("📊 Scores: min=%.4f, max=%.4f | Positifs réels: %d/%d\n", 
            min_score, max_score, actual_positives, num_samples);
     
-    // Tester différents seuils avec recherche adaptative (plus efficace)
-    
-    // Phase 1: Recherche grossière de 0.01 à 0.99
+    // 🔧 CORRECTION: Utiliser F1-Score standard au lieu d'un score composite complexe
+    // Tester différents seuils avec recherche adaptative
     for (float threshold = 0.01f; threshold <= 0.99f; threshold += 0.01f) {
         int TP = 0, FP = 0, FN = 0, TN = 0;
         
@@ -707,31 +745,33 @@ float optimize_threshold_simple(NeuralNetwork *net, float inputs[][21], float ta
         float recall = (TP + FN > 0) ? (float)TP / (TP + FN) : 0.0f;
         float f1 = (precision + recall > 0) ? 2.0f * precision * recall / (precision + recall) : 0.0f;
         
-                 // Métrique composite SPÉCIALISÉE MÉDICAL pour maximiser le rappel
-         // En médical, mieux vaut trop détecter que pas assez (priorité au rappel)
-         float composite_score = 0.0f;
-         if (recall >= 0.5f && precision >= 0.05f) { // Seuils minimums adaptés au médical
-             composite_score = 0.6f * recall + 0.3f * f1 + 0.1f * precision; // Priorité massive au rappel
-         }
+        // 🔧 CORRECTION: Utiliser F1-Score standard comme métrique d'optimisation
+        float current_score = f1;
         
         // Debug pour les seuils intéressants
-        if (threshold <= 0.15f || f1 > 0.1f || composite_score > 0.0f) {
-            printf("  Seuil %.2f: TP=%d FP=%d FN=%d TN=%d | Prec=%.3f Recall=%.3f F1=%.3f Comp=%.3f\n",
-                   threshold, TP, FP, FN, TN, precision, recall, f1, composite_score);
+        if (threshold <= 0.15f || f1 > 0.1f || current_score > 0.0f) {
+            printf("  Seuil %.2f: TP=%d FP=%d FN=%d TN=%d | Prec=%.3f Recall=%.3f F1=%.3f\n",
+                   threshold, TP, FP, FN, TN, precision, recall, f1);
         }
         
-        // Mettre à jour le meilleur selon le score composite
-        if (composite_score > best_f1) {
-            best_f1 = composite_score;
+        // Mettre à jour le meilleur selon le F1-Score
+        if (current_score > best_score) {
+            best_score = current_score;
             best_threshold = threshold;
         }
+    }
+    
+    // 🔧 CORRECTION: Si aucun seuil optimal trouvé, utiliser 0.5 par défaut
+    if (best_score == 0.0f) {
+        best_threshold = 0.5f;
+        printf("⚠️ Aucun seuil optimal trouvé, utilisation de 0.5 par défaut\n");
     }
     
     // Restaurer état dropout
     simple_net->use_dropout = original_dropout;
     simple_net->optimal_threshold = best_threshold;
     
-    printf("🎯 Seuil optimal trouvé: %.2f (F1: %.3f)\n", best_threshold, best_f1);
+    printf("🎯 Seuil optimal trouvé: %.2f (F1: %.3f)\n", best_threshold, best_score);
     return best_threshold;
 }
 

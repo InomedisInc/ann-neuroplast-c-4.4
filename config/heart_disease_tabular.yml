@@ -9,25 +9,26 @@ dataset_name: "heart_disease"
 dataset: "datasets/heart_disease.csv"
 
 # Définition des champs (NOUVEAU SYSTÈME)
-# Liste des champs d'entrée (features) pour les maladies cardiaques
-input_fields: "age,sex,chest_pain_type,resting_blood_pressure,serum_cholesterol,fasting_blood_sugar,resting_ecg,max_heart_rate,exercise_induced_angina,st_depression,st_slope,major_vessels,thalassemia"
+# Liste des champs d'entrée (features) pour les maladies cardiaques - CORRIGÉ AVEC LES VRAIS NOMS
+input_fields: "HighBP,HighChol,CholCheck,BMI,Smoker,Stroke,Diabetes,PhysActivity,Fruits,Veggies,HvyAlcoholConsump,AnyHealthcare,NoDocbcCost,GenHlth,MentHlth,PhysHlth,DiffWalk,Sex,Age,Education,Income"
 
-# Liste des champs de sortie (targets)
-output_fields: "heart_disease"
+# Liste des champs de sortie (targets) - CORRIGÉ AVEC LE VRAI NOM
+output_fields: "HeartDiseaseorAttack"
 
 # Le système détectera automatiquement :
 # - Type numérique vs catégorique pour chaque champ
-# - Appliquera la normalisation min-max pour les champs numériques (age, resting_blood_pressure, serum_cholesterol, max_heart_rate, st_depression)
-# - Appliquera la binarisation 0/1 pour les champs catégoriques (sex, chest_pain_type, fasting_blood_sugar, resting_ecg, exercise_induced_angina, st_slope, major_vessels, thalassemia)
+# - Appliquera la normalisation min-max pour les champs numériques (BMI, GenHlth, MentHlth, PhysHlth, Age)
+# - Appliquera la binarisation 0/1 pour les champs catégoriques (HighBP, HighChol, CholCheck, Smoker, Stroke, Diabetes, PhysActivity, Fruits, Veggies, HvyAlcoholConsump, AnyHealthcare, NoDocbcCost, DiffWalk, Sex, Education, Income)
 
 # Dimensions (optionnelles - détectées automatiquement)
-input_cols: 13   # Sera validé par l'analyseur
+input_cols: 21   # Sera validé par l'analyseur - CORRIGÉ (21 features au lieu de 13)
 output_cols: 1   # Classification binaire maladie cardiaque
 
 # Configuration d'entraînement
 batch_size: 16
 max_epochs: 100
 learning_rate: 0.001
+debug_mode: false
 
 # Early stopping optimisé
 early_stopping: true

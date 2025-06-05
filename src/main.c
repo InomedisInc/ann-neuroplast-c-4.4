@@ -33,6 +33,13 @@
 #include "colored_output.h"
 #include "model_saver/model_saver.h"
 
+// Macro pour les messages de debug conditionnels
+#define DEBUG_PRINTF(config, ...) do { \
+    if ((config) && (config)->debug_mode) { \
+        printf(__VA_ARGS__); \
+    } \
+} while(0)
+
 // Variables globales pour accéder aux arguments de ligne de commande
 static int argc_global = 0;
 static char **argv_global = NULL;
@@ -259,7 +266,7 @@ ArchitectureCache* get_cached_architecture(int optimizer_idx, int activation_idx
 }
 
 // Fonction pour calculer toutes les métriques (CORRIGÉE pour de meilleures performances)
-AllMetrics compute_all_metrics(NeuralNetwork *network, Dataset *dataset) {
+AllMetrics compute_all_metrics(NeuralNetwork *network, Dataset *dataset, const RichConfig *config) {
     AllMetrics metrics = {0};
     
     if (!network || !dataset || dataset->num_samples == 0) {
@@ -326,19 +333,24 @@ AllMetrics compute_all_metrics(NeuralNetwork *network, Dataset *dataset) {
         float score_range = max_score - min_score;
         
         // 🔧 PROBLÈME DÉTECTÉ: Si toutes les prédictions sont identiques ou dans une plage très étroite
-        if (score_range < 0.01f) {
-            printf("⚠️ PROBLÈME: Réseau prédit dans une plage très étroite!\n");
-            printf("   Scores min/max: %.6f/%.6f (plage: %.6f)\n", min_score, max_score, score_range);
+        // Maintenant conditionnel au debug_mode et avec seuil plus tolérant
+        if (score_range < 0.001f) {  // Plus strict : seulement si vraiment identiques
+            DEBUG_PRINTF(config, "⚠️ PROBLÈME: Réseau prédit dans une plage très étroite!\n");
+            DEBUG_PRINTF(config, "   Scores min/max: %.6f/%.6f (plage: %.6f)\n", min_score, max_score, score_range);
             
             // Utiliser la moyenne comme seuil si la plage est trop étroite
             if (mean_score > 0.0f && mean_score < 1.0f) {
                 optimal_threshold = mean_score;
-                printf("   🔧 Ajustement: Utilisation de la moyenne (%.6f) comme seuil\n", optimal_threshold);
+                DEBUG_PRINTF(config, "   🔧 Ajustement: Utilisation de la moyenne (%.6f) comme seuil\n", optimal_threshold);
             } else {
                 // Utiliser un seuil basé sur la distribution des targets
                 optimal_threshold = (float)targets_1 / (targets_0 + targets_1);
-                printf("   🔧 Ajustement: Utilisation du ratio des classes (%.6f) comme seuil\n", optimal_threshold);
+                DEBUG_PRINTF(config, "   🔧 Ajustement: Utilisation du ratio des classes (%.6f) comme seuil\n", optimal_threshold);
             }
+        } else if (score_range < 0.01f) {
+            // Avertissement plus doux pour plages étroites mais pas critiques
+            DEBUG_PRINTF(config, "ℹ️ Plage de prédiction étroite: %.6f (peut indiquer un début de saturation)\n", score_range);
+            optimal_threshold = (min_score + max_score) / 2.0f;
         } else {
             // Seuil optimal basé sur la distribution si la plage est suffisante
             optimal_threshold = (min_score + max_score) / 2.0f;
@@ -356,7 +368,7 @@ AllMetrics compute_all_metrics(NeuralNetwork *network, Dataset *dataset) {
     }
     
     // 🔧 DEBUG: Afficher les statistiques de prédiction
-    printf("🔍 Debug Métriques: Scores [%.4f, %.4f] | Pred[0:%d, 1:%d] | True[0:%d, 1:%d] | Seuil: %.4f\n", 
+    DEBUG_PRINTF(config, "🔍 Debug Métriques: Scores [%.4f, %.4f] | Pred[0:%d, 1:%d] | True[0:%d, 1:%d] | Seuil: %.4f\n", 
            min_score, max_score, predictions_0, predictions_1, targets_0, targets_1, optimal_threshold);
     
     // 1. Accuracy - utiliser les valeurs float pour plus de précision
@@ -367,7 +379,7 @@ AllMetrics compute_all_metrics(NeuralNetwork *network, Dataset *dataset) {
     compute_confusion_matrix(y_true_int, y_pred_int, dataset->num_samples, &TP, &TN, &FP, &FN);
     
     // 🔧 DEBUG: Afficher la matrice de confusion
-    printf("   Matrice: TP=%d FP=%d FN=%d TN=%d\n", TP, FP, FN, TN);
+    DEBUG_PRINTF(config, "   Matrice: TP=%d FP=%d FN=%d TN=%d\n", TP, FP, FN, TN);
     
     // 🔧 CORRECTION 2: Vérifications de sécurité pour éviter division par zéro
     // 3. Precision, Recall, F1-Score avec gestion des cas limites
@@ -376,9 +388,9 @@ AllMetrics compute_all_metrics(NeuralNetwork *network, Dataset *dataset) {
     } else {
         metrics.precision = (predictions_1 == 0) ? 1.0f : 0.0f; // 1.0 si aucune prédiction positive et c'est correct
         if (predictions_1 == 0) {
-            printf("   ℹ️ Precision=1: Aucune prédiction positive (correct si aucun vrai positif)\n");
+            DEBUG_PRINTF(config, "   ℹ️ Precision=1: Aucune prédiction positive (correct si aucun vrai positif)\n");
         } else {
-            printf("   ⚠️ Precision=0: Aucune prédiction positive (TP+FP=0)\n");
+            DEBUG_PRINTF(config, "   ⚠️ Precision=0: Aucune prédiction positive (TP+FP=0)\n");
         }
     }
     
@@ -387,9 +399,9 @@ AllMetrics compute_all_metrics(NeuralNetwork *network, Dataset *dataset) {
     } else {
         metrics.recall = (targets_1 == 0) ? 1.0f : 0.0f; // 1.0 si aucun vrai positif dans les données
         if (targets_1 == 0) {
-            printf("   ℹ️ Recall=1: Aucun vrai positif dans les données (correct)\n");
+            DEBUG_PRINTF(config, "   ℹ️ Recall=1: Aucun vrai positif dans les données (correct)\n");
         } else {
-            printf("   ⚠️ Recall=0: Échec de détection des vrais positifs\n");
+            DEBUG_PRINTF(config, "   ⚠️ Recall=0: Échec de détection des vrais positifs\n");
         }
     }
     
@@ -400,7 +412,7 @@ AllMetrics compute_all_metrics(NeuralNetwork *network, Dataset *dataset) {
         // Cas spécial : si pas de positifs dans les données ET pas de prédictions positives
         if (targets_1 == 0 && predictions_1 == 0) {
             metrics.f1_score = 1.0f; // Parfait pour ce cas
-            printf("   ℹ️ F1=1: Pas de positifs dans les données et pas de fausses prédictions positives\n");
+            DEBUG_PRINTF(config, "   ℹ️ F1=1: Pas de positifs dans les données et pas de fausses prédictions positives\n");
         } else {
             metrics.f1_score = 0.0f;
         }
@@ -619,6 +631,7 @@ void print_rich_config(const RichConfig *cfg) {
     printf("Learning rate: %f\n", cfg->learning_rate);
     printf("Early stopping: %s\n", cfg->early_stopping ? "✅ Activé" : "❌ Désactivé");
     printf("Patience     : %d époques\n", cfg->patience);
+    printf("Debug mode   : %s\n", cfg->debug_mode ? "🔍 Activé" : "🔇 Masqué");
     printf("Optimized parameters: %s\n", cfg->optimized_parameters ? "🚀 Optimiseur temps réel" : "📊 Configuration statique");
 
     printf("\nNeuroplast methods (%d):\n", cfg->num_neuroplast_methods);
@@ -1432,7 +1445,7 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
                         
                         // Calcul des métriques toutes les 5 époques OU si early stopping activé
                         if (epoch % 5 == 0 || epoch == max_epochs - 1 || dataset_config.early_stopping) {
-                            AllMetrics test_metrics = compute_all_metrics(network, test_set);
+                            AllMetrics test_metrics = compute_all_metrics(network, test_set, &dataset_config);
                             
                             // Mettre à jour les meilleures métriques pour cet essai
                             if (test_metrics.f1_score > trial_best_metrics.f1_score) {
@@ -1483,8 +1496,8 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
                     
                     // 🎯 ÉVALUER ET SAUVEGARDER LE MODÈLE AVEC NOTRE SYSTÈME INTÉGRÉ
                     // Calculer les métriques finales pour la sauvegarde
-                    AllMetrics final_metrics = compute_all_metrics(network, test_set);
-                    AllMetrics train_metrics = compute_all_metrics(network, train_set);
+                    AllMetrics final_metrics = compute_all_metrics(network, test_set, &dataset_config);
+                    AllMetrics train_metrics = compute_all_metrics(network, train_set, &dataset_config);
                     
                     // Créer le nom du modèle
                     char model_name[128];

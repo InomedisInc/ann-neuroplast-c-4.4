@@ -63,6 +63,9 @@ typedef struct {
     int is_image_dataset;          // 0 = données tabulaires, 1 = images
     float train_test_split;        // Ratio de division train/test (pour données tabulaires)
 
+    // Configuration de debug
+    int debug_mode;                // 0 = messages debug masqués, 1 = messages debug affichés
+
     // Configuration de l'entraînement
     int batch_size;
     int max_epochs;

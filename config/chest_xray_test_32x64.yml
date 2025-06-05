@@ -1,0 +1,56 @@
+# Configuration de test automatique
+is_image_dataset: true
+dataset_name: "chest_xray_pneumonia"
+dataset: "chest_xray_images"
+
+# Répertoires d'images
+image_train_dir: "/Volumes/External/fabricevaussenat/Coding/Data/chest_xray/chest_xray/train"
+image_test_dir: "/Volumes/External/fabricevaussenat/Coding/Data/chest_xray/chest_xray/test"
+image_val_dir: "/Volumes/External/fabricevaussenat/Coding/Data/chest_xray/chest_xray/val"
+
+# Dimensions des images
+image_width: 32
+image_height: 64
+image_channels: 1
+
+# Configuration de l'entraînement
+batch_size: 32
+max_epochs: 100
+learning_rate: 0.001
+debug_mode: true
+
+# Early stopping
+early_stopping: true
+patience: 8
+
+# Paramètres d'optimisation
+dropout_rate: 0.4
+l2_regularization: 0.0005
+momentum: 0.9
+
+# Export des métriques
+metrics_export: true
+csv_export: true
+
+# Méthodes de neuroplasticité
+neuroplast_methods:
+  - standard
+  - adaptive
+
+# Fonctions d'activation
+activations:
+  - relu
+  - sigmoid
+
+# Optimiseurs
+optimizers:
+  - adam
+  - adamw
+
+# Métriques
+metrics:
+  - accuracy
+  - precision
+  - recall 
+  - f1_score
+  - auc_roc

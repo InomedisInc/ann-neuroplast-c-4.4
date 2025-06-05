@@ -13,11 +13,11 @@ is_image_dataset: false
 dataset: "datasets/heart_disease.csv"
 
 # 🆕 NOUVEAU SYSTÈME D'ANALYSE AUTOMATIQUE DES CHAMPS
-# Liste des champs d'entrée (features) pour les maladies cardiaques
-input_fields: "age,sex,chest_pain_type,resting_blood_pressure,serum_cholesterol,fasting_blood_sugar,resting_ecg,max_heart_rate,exercise_induced_angina,st_depression,st_slope,major_vessels,thalassemia"
+# Liste des champs d'entrée (features) pour les maladies cardiaques - CORRIGÉ AVEC LES VRAIS NOMS
+input_fields: "HighBP,HighChol,CholCheck,BMI,Smoker,Stroke,Diabetes,PhysActivity,Fruits,Veggies,HvyAlcoholConsump,AnyHealthcare,NoDocbcCost,GenHlth,MentHlth,PhysHlth,DiffWalk,Sex,Age,Education,Income"
 
-# Liste des champs de sortie (targets)
-output_fields: "heart_disease"
+# Liste des champs de sortie (targets) - CORRIGÉ AVEC LE VRAI NOM
+output_fields: "HeartDiseaseorAttack"
 
 # Configuration avancée pour l'analyseur
 auto_normalize: true      # Normalisation automatique des champs numériques
@@ -30,6 +30,7 @@ max_epochs: 100
 learning_rate: 0.005
 early_stopping: true
 patience: 10
+debug_mode: false
 
 # Méthodes neuroplast à tester
 neuroplast_methods:

@@ -28,6 +28,7 @@ output_cols: 1   # Classification binaire
 batch_size: 32
 max_epochs: 150
 learning_rate: 0.003
+debug_mode: false
 
 # Early stopping optimisé
 early_stopping: true

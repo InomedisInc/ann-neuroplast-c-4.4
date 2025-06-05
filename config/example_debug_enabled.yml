@@ -1,0 +1,42 @@
+# Configuration d'exemple avec debug activé
+# NEUROPLAST-ANN v4.3 - Mode Debug
+
+# Identification du dataset
+dataset_name: "test_debug"
+dataset: "datasets/heart_disease.csv"
+is_image_dataset: false
+
+# Analyse des champs
+input_fields: "HighBP,HighChol,CholCheck,BMI,Smoker,Stroke,Diabetes,PhysActivity,Fruits,Veggies,HvyAlcoholConsump,AnyHealthcare,NoDocbcCost,GenHlth,MentHlth,PhysHlth,DiffWalk,Sex,Age,Education,Income"
+output_fields: "HeartDiseaseorAttack"
+
+# Configuration d'entraînement
+batch_size: 16
+max_epochs: 20
+learning_rate: 0.01
+early_stopping: true
+patience: 5
+debug_mode: true  # 🔍 MODE DEBUG ACTIVÉ - Affiche les messages de debug
+
+# Configuration d'analyse
+auto_normalize: true
+auto_categorize: true
+field_detection: "auto"
+
+# Méthodes de test simplifiées
+neuroplast_methods:
+  - standard
+
+activations:
+  - relu
+
+optimizers:
+  - adam
+
+metrics:
+  - accuracy
+  - f1_score
+
+# Description
+name: "Configuration de test avec debug activé"
+description: "Utilisée pour tester l'affichage des messages de debug dans NEUROPLAST-ANN" 

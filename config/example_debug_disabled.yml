@@ -1,0 +1,51 @@
+# Configuration d'exemple avec debug désactivé
+# NEUROPLAST-ANN v4.3 - Mode Standard (Production)
+
+# Identification du dataset
+dataset_name: "test_production"
+dataset: "datasets/heart_disease.csv"
+is_image_dataset: false
+
+# Analyse des champs
+input_fields: "HighBP,HighChol,CholCheck,BMI,Smoker,Stroke,Diabetes,PhysActivity,Fruits,Veggies,HvyAlcoholConsump,AnyHealthcare,NoDocbcCost,GenHlth,MentHlth,PhysHlth,DiffWalk,Sex,Age,Education,Income"
+output_fields: "HeartDiseaseorAttack"
+
+# Configuration d'entraînement
+batch_size: 32
+max_epochs: 100
+learning_rate: 0.005
+early_stopping: true
+patience: 10
+debug_mode: false  # 🔇 MODE PRODUCTION - Messages de debug masqués
+
+# Configuration d'analyse
+auto_normalize: true
+auto_categorize: true
+field_detection: "auto"
+
+# Méthodes complètes pour production
+neuroplast_methods:
+  - standard
+  - adaptive
+  - advanced
+
+activations:
+  - relu
+  - neuroplast
+  - gelu
+
+optimizers:
+  - adam
+  - adamw
+  - sgd
+
+metrics:
+  - accuracy
+  - precision
+  - recall
+  - f1_score
+  - auc_roc
+
+# Description
+name: "Configuration de production avec debug désactivé"
+description: "Configuration optimisée pour l'entraînement en production sans messages de debug" 

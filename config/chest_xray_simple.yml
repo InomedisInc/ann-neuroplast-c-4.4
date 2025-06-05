@@ -1,48 +1,54 @@
+# Configuration simple pour le dataset d'images Chest X-Ray
+# Version simplifiée pour tests rapides
+
+# Type de dataset
 is_image_dataset: true
 
-# Identification du dataset pour organisation des modèles
-dataset_name: "chest_xray"
+# Identification du dataset
+dataset_name: "chest_xray_simple"
+dataset: "chest_xray_simple"
 
-# Répertoires d'images séparés (obligatoires: train et test, optionnel: val)
+# Répertoires d'images
 image_train_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/train"
 image_test_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/test"
-image_val_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/val"
 
-# Dimensions des images
-image_width: 128
-image_height: 128
-image_channels: 3
+# Dimensions d'images (réduites pour tests rapides)
+image_width: 8
+image_height: 8
+image_channels: 1
 
-# Paramètres d'entraînement
+# Configuration d'entraînement (réduite pour tests rapides)
 batch_size: 16
-max_epochs: 50
-learning_rate: 0.001
+max_epochs: 20
+learning_rate: 0.01
+debug_mode: false
+
+# Early stopping
 early_stopping: true
-patience: 10
+patience: 5
 
-# Architecture CNN
-cnn_architecture: true
-cnn_filters: [32, 64, 128]
-cnn_kernel_sizes: [3, 3, 3]
-cnn_pool_sizes: [2, 2, 2]
-cnn_dropout: 0.25
+# Export
+metrics_export: true
+csv_export: true
 
-# Méthodes neuroplast (format simple)
+# Description
+name: "chest_xray_simple_test"
+description: "Configuration simple pour tests rapides des radiographies thoraciques"
+
+# Méthodes (version simple)
 neuroplast_methods:
   - standard
-  - adaptive
 
-# Fonctions d'activation (format simple)
+# Activations (version simple)
 activations:
   - relu
-  - gelu
 
-# Optimiseurs (format simple)
+# Optimiseurs (version simple)
 optimizers:
   - adam
-  - adamw
 
-# Métriques (format simple)
+# Métriques
 metrics:
   - accuracy
   - f1_score
+  - auc_roc 

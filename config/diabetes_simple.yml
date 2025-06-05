@@ -13,11 +13,11 @@ is_image_dataset: false
 dataset: "datasets/diabetes.csv"
 
 # 🆕 NOUVEAU SYSTÈME D'ANALYSE AUTOMATIQUE DES CHAMPS
-# Liste des champs d'entrée (features) pour le diabète
-input_fields: "pregnancies,glucose,blood_pressure,skin_thickness,insulin,bmi,diabetes_pedigree_function,age"
+# Liste des champs d'entrée (features) pour le diabète - CORRIGÉ AVEC LES VRAIS NOMS
+input_fields: "Pregnancies,Glucose,BloodPressure,SkinThickness,Insulin,BMI,DiabetesPedigreeFunction,Age"
 
-# Liste des champs de sortie (targets)
-output_fields: "outcome"
+# Liste des champs de sortie (targets) - CORRIGÉ AVEC LE VRAI NOM
+output_fields: "Outcome"
 
 # Configuration avancée pour l'analyseur
 auto_normalize: true      # Normalisation automatique des champs numériques
@@ -30,6 +30,7 @@ max_epochs: 100
 learning_rate: 0.005
 early_stopping: true
 patience: 10
+debug_mode: false
 
 # Méthodes neuroplast à tester
 neuroplast_methods:

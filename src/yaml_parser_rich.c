@@ -113,6 +113,16 @@ static int read_dataset_dimensions(const char *dataset_file, RichConfig *cfg) {
             while (*value && isspace(*value)) value++;
             cfg->patience = atoi(value);
         }
+        else if (strstr(line, "debug_mode:")) {
+            char *value = strchr(line, ':') + 1;
+            while (*value && isspace(*value)) value++;
+            // Parsing booléen : true/false, 1/0, yes/no
+            if (strstr(value, "true") || strstr(value, "yes") || strstr(value, "1")) {
+                cfg->debug_mode = 1;
+            } else {
+                cfg->debug_mode = 0;
+            }
+        }
     }
     
     fclose(file);
@@ -135,6 +145,7 @@ int parse_yaml_rich(const char *filename, RichConfig *cfg) {
     cfg->early_stopping = 1;
     cfg->patience = 20;
     cfg->optimized_parameters = 0;
+    cfg->debug_mode = 0;               // Messages debug masqués par défaut
     cfg->input_cols = 10;
     cfg->output_cols = 1;
     cfg->image_width = 128;
@@ -256,6 +267,10 @@ int parse_yaml_rich(const char *filename, RichConfig *cfg) {
                 }
                 else if (strcmp(k, "optimized_parameters") == 0) {
                     cfg->optimized_parameters = (strstr(v, "true") || strstr(v, "yes") || strstr(v, "1")) ? 1 : 0;
+                    current_list_type[0] = '\0';
+                }
+                else if (strcmp(k, "debug_mode") == 0) {
+                    cfg->debug_mode = (strstr(v, "true") || strstr(v, "yes") || strstr(v, "1")) ? 1 : 0;
                     current_list_type[0] = '\0';
                 }
                 else if (strcmp(k, "is_image_dataset") == 0) {
