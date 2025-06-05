@@ -1385,7 +1385,13 @@ int test_all_with_real_dataset(const char **neuroplast_methods, int num_methods,
                     }
                     
                     char dataset_info[128];
-                    snprintf(dataset_info, sizeof(dataset_info), "Heart Attack (%zu échantillons)", dataset->num_samples);
+                    const char *dataset_display_name = "Dataset";
+                    if (strlen(dataset_config.dataset_name) > 0) {
+                        dataset_display_name = dataset_config.dataset_name;
+                    } else if (strlen(dataset_config.dataset) > 0) {
+                        dataset_display_name = dataset_config.dataset;
+                    }
+                    snprintf(dataset_info, sizeof(dataset_info), "%s (%zu échantillons)", dataset_display_name, dataset->num_samples);
                     
                     // Class weights adaptatifs selon la méthode neuroplast (OPTIMISÉ POUR >95%)
                     float class_weights[2] = {1.0f, 1.0f}; // Équilibré par défaut

@@ -1,14 +1,13 @@
-# Configuration optimisée pour pipeline MLP sur images 32x32 (compatibilité NEUROPLAST-ANN v4.3)
+# Configuration optimisée pour pipeline MLP sur images 32x32 (compatibilité NEUROPLAST-ANN v4.4)
 
 is_image_dataset: true
 
 dataset_name: "chest_xray_pneumonia"
-dataset: "chest_xray_images"
 
 # Répertoires d'images (obligatoires)
-image_train_dir: "/Volumes/External/fabricevaussenat/Coding/Data/chest_xray/chest_xray/train"
-image_test_dir: "/Volumes/External/fabricevaussenat/Coding/Data/chest_xray/chest_xray/test"
-image_val_dir: "/Volumes/External/fabricevaussenat/Coding/Data/chest_xray/chest_xray/val"
+image_train_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/train"
+image_test_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/test"
+image_val_dir: "/Users/fabricevaussenat/SynologyDrive/data-science/chest_xray/chest_xray/val"
 
 # Dimensions d'images (32x32 pour compromis performance/rapidité)
 image_width: 64
